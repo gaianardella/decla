@@ -1,7 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:decla/widgets/rounded_circular_button.dart';
 import 'package:decla/widgets/rounded_text_form_field.dart';
+import 'package:decla/widgets/google_apple.dart';
+import 'package:flutter/gestures.dart';
 
 class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
@@ -22,8 +25,11 @@ class LoginPage extends StatelessWidget {
     return Container(
       width: MediaQuery.of(context).size.width,
       height: MediaQuery.of(context).size.height * 0.30,
-      color: const Color.fromRGBO(230, 253, 253, 1.0),
-      padding: EdgeInsets.only(top: MediaQuery.of(context).size.height * 0.10),
+      color: const Color.fromRGBO(176, 222, 250, 1),
+      padding: EdgeInsets.only(
+        top: MediaQuery.of(context).size.height * 0.10,
+        bottom: MediaQuery.of(context).size.height * 0,
+      ),
       child: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -42,8 +48,7 @@ class LoginPage extends StatelessWidget {
           Image.asset(
             "assets/images/my-bg.png",
             width: MediaQuery.of(context).size.width * 0.50,
-            height: double.infinity,
-            fit: BoxFit.fill,
+            fit: BoxFit.contain,
           )
         ],
       ),
@@ -63,6 +68,7 @@ class LoginPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             _formFields(context),
+            _loginWidth(context),
             _bottomButtons(context),
           ],
         ),
@@ -71,7 +77,7 @@ class LoginPage extends StatelessWidget {
   }
 
   Widget _formFields(BuildContext context) {
-    return const SizedBox(
+    return SizedBox(
       child: Column(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -85,11 +91,47 @@ class LoginPage extends StatelessWidget {
             hintText: "Password",
             obsecureText: true,
           ),
+          SizedBox(height: 20), // Adding 16 pixels of vertical space
+          SizedBox(
+            width: MediaQuery.of(context).size.width * 0.80,
+            height: MediaQuery.of(context).size.height * 0.07,
+            child: RoundedCircularButton(
+              text: "Sign In",
+            ),
+          ),
           SizedBox(height: 16), // Adding 16 pixels of vertical space
           Text(
             "Forgot Password?",
             style: TextStyle(color: Colors.blue, fontSize: 15),
-          )
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _loginWidth(BuildContext context) {
+    return const Padding(
+      padding: EdgeInsets.only(top: 40.0), // Add space from the top
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            'Or Login With',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: Color.fromRGBO(0, 62, 101, 1),
+            ),
+          ),
+          SizedBox(height: 10), // Add some spacing between the title and tiles
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SquareTile(imagePath: 'assets/images/google.svg'),
+              SizedBox(width: 25),
+              SquareTile(imagePath: 'assets/images/apple.svg'),
+            ],
+          ),
         ],
       ),
     );
@@ -101,15 +143,8 @@ class LoginPage extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        SizedBox(
-          width: MediaQuery.of(context).size.width * 0.80,
-          height: MediaQuery.of(context).size.height * 0.07,
-          child: const RoundedCircularButton(
-            text: "Sign In",
-          ),
-        ),
         Padding(
-          padding: const EdgeInsets.only(top: 20, bottom: 30),
+          padding: const EdgeInsets.only(top: 30),
           child: GestureDetector(
             onTap: () {
               Navigator.push(
@@ -117,12 +152,28 @@ class LoginPage extends StatelessWidget {
                 MaterialPageRoute(builder: (context) => SecondPage()),
               );
             },
-            child: const Text(
-              "I Don't Have an Account",
-              style: TextStyle(
+            child: RichText(
+              text: TextSpan(
+                style: const TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.w600,
-                  color: Colors.blue),
+                  color: Color.fromRGBO(0, 62, 101, 1),
+                ),
+                children: [
+                  TextSpan(text: "Don't have an account? "),
+                  TextSpan(
+                    text: "Sign Up",
+                    style: TextStyle(
+                      decoration: TextDecoration.underline,
+                      color: Color.fromRGBO(0, 148, 240, 1),
+                    ),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        // Handle "Sign Up" link tap
+                      },
+                  ),
+                ],
+              ),
             ),
           ),
         )
