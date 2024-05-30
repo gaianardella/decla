@@ -5,6 +5,7 @@ import 'package:decla/widgets/rounded_circular_button.dart';
 import 'package:decla/widgets/rounded_text_form_field.dart';
 import 'package:decla/widgets/google_apple.dart';
 import 'package:flutter/gestures.dart';
+import 'package:decla/pages/signup_page.dart';
 
 class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
@@ -170,6 +171,10 @@ class LoginPage extends StatelessWidget {
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {
                         // Handle "Sign Up" link tap
+                        Navigator.push(
+                          context, // Pass the BuildContext from the widget tree
+                          MaterialPageRoute(builder: (context) => SignupPage()),
+                        );
                       },
                   ),
                 ],
