@@ -63,6 +63,9 @@ flutter:
   assets:
       - assets/images/ 
       - assets/images/outfit-generator.jpg
+      - assets/images/manage.jpg
+      - assets/images/avatar.png
+      - assets/images/stat.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
