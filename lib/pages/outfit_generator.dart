@@ -8,7 +8,9 @@ class OutfitGenerator extends StatelessWidget {
       appBar: AppBar(
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pop(context); // Go back to the previous page
+          },
         ),
         title: Text('Your Outfit'),
         centerTitle: true,
