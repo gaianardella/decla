@@ -42,13 +42,16 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.purple),
-          onPressed: () {},
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context); // Go back to the previous page
+          },
         ),
-        title: Text('Category', style: TextStyle(color: Colors.black)),
+        title: Text('Your Outfit'),
+        centerTitle: true,
         backgroundColor: Colors.white,
-        elevation: 0,
       ),
+      backgroundColor: Color.fromRGBO(235, 235, 235, 1),
       body: Column(
         children: [
           Padding(
@@ -77,14 +80,63 @@ class _HomeScreenState extends State<HomeScreen> {
             child: ListView.builder(
               itemCount: items.length,
               itemBuilder: (context, index) {
-                return Card(
-                  margin: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-                  child: ListTile(
-                    leading: Image.asset(items[index]['image']!),
-                    title: Text(items[index]['label']!),
-                    trailing: IconButton(
-                      icon: Icon(Icons.delete, color: Colors.red),
-                      onPressed: () => _deleteItem(index),
+                return Container(
+                  height: 120,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(
+                        4.0), // Match the Card's border radius if any
+                    boxShadow: [
+                      BoxShadow(
+                        color: Color.fromRGBO(176, 176, 176, 0.2),
+                        spreadRadius: -6,
+                        blurRadius: 10,
+                        offset: Offset(0, 0), // changes position of shadow
+                      ),
+                    ],
+                  ),
+                  child: Card(
+                    color: Colors.white,
+                    margin:
+                        EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                    child: Center(
+                      child: ListTile(
+                        leading: Container(
+                            width: 80,
+                            child: Image.asset(
+                              items[index]['image']!,
+                              fit: BoxFit.cover,
+                            )),
+                        title: Text(items[index]['label']!),
+                        trailing: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(
+                                8.0), // Set border radius for the container
+                            boxShadow: [
+                              BoxShadow(
+                                color: Color.fromRGBO(176, 176, 176, 1),
+                                spreadRadius: -6,
+                                blurRadius: 15,
+                                offset:
+                                    Offset(0, 0), // changes position of shadow
+                              ),
+                            ],
+                            gradient: LinearGradient(
+                              colors: [
+                                Color.fromRGBO(255, 120, 120, 1),
+                                Color.fromRGBO(255, 46, 46, 1)
+                              ], // Set gradient colors
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ),
+                          ),
+                          child: IconButton(
+                            icon: Icon(Icons.delete_outline,
+                                color: Colors
+                                    .white), // Set white color for the icon
+                            onPressed: () => _deleteItem(index),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 );
@@ -93,13 +145,24 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: ElevatedButton.icon(
-              onPressed: () {},
-              icon: Icon(Icons.add),
-              label: Text('Add More Items'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.purple,
-                foregroundColor: Colors.white,
+            child: SizedBox(
+              width: double.infinity, // Set the desired width
+              height: 50, // Set the desired height
+              child: ElevatedButton.icon(
+                onPressed: () {},
+                icon: Icon(Icons.add),
+                label: Text(
+                  'Add More Items',
+                  style: TextStyle(fontSize: 18),
+                ),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color.fromRGBO(58, 0, 207, 1),
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius:
+                        BorderRadius.circular(8.0), // Set border radius
+                  ),
+                ),
               ),
             ),
           ),
@@ -109,23 +172,37 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildFilterChip(String label) {
-    return FilterChip(
-      label: Text(
-        label,
-        style: TextStyle(
-          color: _selectedChip == label ? Colors.white : Colors.black,
-        ),
+    return Container(
+      height: 40,
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            spreadRadius: 0,
+            blurRadius: 8,
+            offset: Offset(0, 0), // changes position of shadow
+          ),
+        ],
       ),
-      selected: _selectedChip == label,
-      onSelected: (selected) {
-        setState(() {
-          _selectedChip = selected ? label : '';
-        });
-      },
-      selectedColor: Colors.green,
-      backgroundColor: Colors.white,
-      checkmarkColor: Colors
-          .white, // Optional: makes the checkmark more visible on green background
+      child: FilterChip(
+        label: Text(
+          label,
+          style: TextStyle(
+            color: _selectedChip == label ? Colors.white : Colors.black,
+          ),
+        ),
+        selected: _selectedChip == label,
+        onSelected: (selected) {
+          setState(() {
+            _selectedChip = selected ? label : '';
+          });
+        },
+        selectedColor: Color.fromRGBO(0, 219, 146, 1),
+        backgroundColor: Colors.white,
+        checkmarkColor: Colors.white,
+        side: BorderSide
+            .none, // Optional: makes the checkmark more visible on green background
+      ),
     );
   }
 }
