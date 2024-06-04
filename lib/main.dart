@@ -55,7 +55,8 @@ class MyApp extends StatelessWidget {
       // home: LoginPage(),
       // home: SignupPage(),
       // home: OutfitGenerator(),
-      home: ManageCloset(),
+      // home: ManageCloset(),
+      home: HomePage(),
     );
   }
 }
