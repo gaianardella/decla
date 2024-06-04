@@ -1,5 +1,6 @@
 import 'package:decla/pages/home.dart';
 import 'package:decla/pages/login_page.dart';
+import 'package:decla/pages/manage_closet.dart';
 import 'package:decla/pages/signup_page.dart';
 import 'package:decla/pages/outfit_generator.dart';
 import 'package:flutter/material.dart';
@@ -53,7 +54,8 @@ class MyApp extends StatelessWidget {
       ),
       // home: LoginPage(),
       // home: SignupPage(),
-      home: OutfitGenerator(),
+      // home: OutfitGenerator(),
+      home: ManageCloset(),
     );
   }
 }
