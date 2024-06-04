@@ -1,3 +1,4 @@
+import 'package:decla/pages/outfit_generator.dart';
 import 'package:flutter/material.dart';
 import 'package:decla/widgets/sidebar.dart';
 import 'package:decla/widgets/bottom_navigation.dart';
@@ -86,6 +87,18 @@ Widget _functionsButton(BuildContext context) {
                     ),
                   ],
                 ),
+              ),
+            ),
+            Center(
+              child: InkWell(
+                //A rectangular area of a Material that responds to touch.
+                onTap: () {
+                  // Navigate to the OutfitGenerator function
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => OutfitGenerator()),
+                  );
+                },
               ),
             ),
           ],
