@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:decla/pages/home.dart';
 
 class ManageCloset extends StatelessWidget {
   @override
@@ -11,6 +12,14 @@ class ManageCloset extends StatelessWidget {
       home: HomeScreen(),
     );
   }
+}
+
+void navigateToHome(BuildContext context) {
+  Navigator.pushAndRemoveUntil(
+    context,
+    MaterialPageRoute(builder: (context) => HomePage()),
+    (Route<dynamic> route) => false,
+  );
 }
 
 class HomeScreen extends StatefulWidget {
@@ -44,7 +53,8 @@ class _HomeScreenState extends State<HomeScreen> {
         leading: IconButton(
           icon: Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context); // Go back to the previous page
+            navigateToHome(
+                context); // Navigate back to the home screen using the navigateToHome function
           },
         ),
         title: Text('Your Outfit'),

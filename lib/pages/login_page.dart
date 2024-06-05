@@ -187,21 +187,21 @@ class LoginPage extends StatelessWidget {
   }
 }
 
-class SecondPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Second Page'),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.pop(context); // Go back to the previous page
-          },
-          child: const Text('Go Back'),
-        ),
-      ),
-    );
-  }
-}
+// class SecondPage extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: const Text('Second Page'),
+//       ),
+//       body: Center(
+//         child: ElevatedButton(
+//           onPressed: () {
+//             Navigator.pop(context); // Go back to the previous page
+//           },
+//           child: const Text('Go Back'),
+//         ),
+//       ),
+//     );
+//   }
+// }

@@ -18,7 +18,7 @@ import 'package:device_preview/device_preview.dart';
 // class MyApp extends StatelessWidget {
 //   const MyApp({super.key});
 
-// This widget is the root of your application.
+// // This widget is the root of your application.
 //   @override
 //   Widget build(BuildContext context) {
 //     return MaterialApp(
@@ -31,7 +31,7 @@ import 'package:device_preview/device_preview.dart';
 //       locale: DevicePreview.locale(context),
 //       builder: DevicePreview.appBuilder,
 //       darkTheme: ThemeData.dark(),
-//       home: LoginPage(),
+//       home: HomePage(),
 //     );
 //   }
 // }
@@ -55,8 +55,8 @@ class MyApp extends StatelessWidget {
       // home: LoginPage(),
       // home: SignupPage(),
       // home: OutfitGenerator(),
-      home: ManageCloset(),
-      // home: HomePage(),
+      // home: ManageCloset(),
+      home: HomePage(),
     );
   }
 }
