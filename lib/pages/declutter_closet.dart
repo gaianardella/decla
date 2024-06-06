@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:decla/pages/home.dart';
 
-class ManageCloset extends StatelessWidget {
+class DeclutterCloset extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Manage Closet',
+      title: 'Declutter Closet',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -57,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 context); // Navigate back to the home screen using the navigateToHome function
           },
         ),
-        title: Text('Your Outfit'),
+        title: Text("Items you don\'t use"),
         centerTitle: true,
         backgroundColor: Colors.white,
       ),
@@ -148,29 +148,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 );
               },
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: SizedBox(
-              width: double.infinity, // Set the desired width
-              height: 50, // Set the desired height
-              child: ElevatedButton.icon(
-                onPressed: () {},
-                icon: Icon(Icons.add),
-                label: Text(
-                  'Add More Items',
-                  style: TextStyle(fontSize: 18),
-                ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color.fromRGBO(58, 0, 207, 1),
-                  foregroundColor: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius:
-                        BorderRadius.circular(8.0), // Set border radius
-                  ),
-                ),
-              ),
             ),
           ),
         ],
