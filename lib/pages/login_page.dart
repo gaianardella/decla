@@ -1,3 +1,4 @@
+import 'package:decla/pages/password_recovery.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -6,6 +7,7 @@ import 'package:decla/widgets/rounded_text_form_field.dart';
 import 'package:decla/widgets/google_apple.dart';
 import 'package:flutter/gestures.dart';
 import 'package:decla/pages/signup_page.dart';
+import 'package:decla/pages/password_recovery.dart';
 
 class LoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
@@ -101,9 +103,19 @@ class LoginPage extends StatelessWidget {
             ),
           ),
           SizedBox(height: 16), // Adding 16 pixels of vertical space
-          Text(
-            "Forgot Password?",
-            style: TextStyle(color: Colors.blue, fontSize: 15),
+          GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        PasswordRecovery()), // Ensure LoginPage is correctly imported
+              );
+            },
+            child: Text(
+              "Forgot Password?",
+              style: TextStyle(color: Colors.blue, fontSize: 15),
+            ),
           ),
         ],
       ),
