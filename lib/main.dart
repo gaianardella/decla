@@ -34,8 +34,7 @@ import 'package:device_preview/device_preview.dart';
 //       locale: DevicePreview.locale(context),
 //       builder: DevicePreview.appBuilder,
 //       darkTheme: ThemeData.dark(),
-//       // home: HomePage(),
-//       home: PasswordRecovery(),
+//       home: HomePage(),
 //     );
 //   }
 // }
