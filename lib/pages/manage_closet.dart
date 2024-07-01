@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:decla/pages/home.dart';
+import 'package:decla/pages/add_item.dart';
 
 class ManageCloset extends StatelessWidget {
   @override
@@ -156,7 +157,12 @@ class _HomeScreenState extends State<HomeScreen> {
               width: double.infinity, // Set the desired width
               height: 50, // Set the desired height
               child: ElevatedButton.icon(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => AddItem()),
+                  );
+                },
                 icon: Icon(Icons.add),
                 label: Text(
                   'Add More Items',
