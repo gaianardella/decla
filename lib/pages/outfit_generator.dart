@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:decla/widgets/bottom_navigation.dart';
+import 'package:decla/pages/chosen_outfit.dart';
 
 class OutfitGenerator extends StatelessWidget {
   @override
@@ -76,7 +77,12 @@ class OutfitGenerator extends StatelessWidget {
                   ],
                 ),
                 child: ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ChosenOutfit()),
+                    );
+                  },
                   style: ButtonStyle(
                     shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
