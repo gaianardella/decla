@@ -23,7 +23,7 @@ class SidebarNavigation extends StatelessWidget {
           children: <Widget>[
             Builder(builder: (context) {
               return DrawerHeader(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: Color.fromARGB(255, 255, 255, 255),
                 ),
                 child: Stack(
@@ -43,14 +43,14 @@ class SidebarNavigation extends StatelessWidget {
                                   width: 3,
                                 ),
                               ),
-                              child: CircleAvatar(
+                              child: const CircleAvatar(
                                 radius: 50,
                                 backgroundImage:
                                     AssetImage('assets/images/avatar.png'),
                               ),
                             ),
-                            SizedBox(height: 10),
-                            Text(
+                            const SizedBox(height: 10),
+                            const Text(
                               'Sofia Nardi',
                               style: TextStyle(
                                 color: Color.fromRGBO(39, 39, 39, 1),
@@ -68,7 +68,7 @@ class SidebarNavigation extends StatelessWidget {
                         onTap: () {
                           Navigator.pop(context);
                         },
-                        child: Icon(
+                        child: const Icon(
                           Icons.close,
                           color: Colors.red,
                           size: 30,
@@ -85,8 +85,8 @@ class SidebarNavigation extends StatelessWidget {
                   ListTile(
                     iconColor: Colors.white,
                     textColor: Colors.white,
-                    leading: Icon(Icons.notification_add),
-                    title: Text('Push Notification'),
+                    leading: const Icon(Icons.notification_add),
+                    title: const Text('Push Notification'),
                     onTap: () {
                       Navigator.pop(context);
                     },
@@ -94,8 +94,8 @@ class SidebarNavigation extends StatelessWidget {
                   ListTile(
                     iconColor: Colors.white,
                     textColor: Colors.white,
-                    leading: Icon(Icons.language),
-                    title: Text('Language'),
+                    leading: const Icon(Icons.language),
+                    title: const Text('Language'),
                     onTap: () {
                       Navigator.pop(context);
                     },
@@ -103,8 +103,8 @@ class SidebarNavigation extends StatelessWidget {
                   ListTile(
                     iconColor: Colors.white,
                     textColor: Colors.white,
-                    leading: Icon(Icons.help),
-                    title: Text('Help'),
+                    leading: const Icon(Icons.help),
+                    title: const Text('Help'),
                     onTap: () {
                       Navigator.pop(context);
                     },
@@ -112,8 +112,8 @@ class SidebarNavigation extends StatelessWidget {
                   ListTile(
                     iconColor: Colors.white,
                     textColor: Colors.white,
-                    leading: Icon(Icons.rule),
-                    title: Text('Terms os use'),
+                    leading: const Icon(Icons.rule),
+                    title: const Text('Terms os use'),
                     onTap: () {
                       Navigator.pop(context);
                     },
@@ -121,8 +121,8 @@ class SidebarNavigation extends StatelessWidget {
                   ListTile(
                     iconColor: Colors.white,
                     textColor: Colors.white,
-                    leading: Icon(Icons.policy),
-                    title: Text('Privacy Policy'),
+                    leading: const Icon(Icons.policy),
+                    title: const Text('Privacy Policy'),
                     onTap: () {
                       Navigator.pop(context);
                     },
@@ -130,8 +130,8 @@ class SidebarNavigation extends StatelessWidget {
                   ListTile(
                     iconColor: Colors.white,
                     textColor: Colors.white,
-                    leading: Icon(Icons.verified),
-                    title: Text('Version'),
+                    leading: const Icon(Icons.verified),
+                    title: const Text('Version'),
                     onTap: () {
                       Navigator.pop(context);
                     },
@@ -139,8 +139,8 @@ class SidebarNavigation extends StatelessWidget {
                   ListTile(
                     iconColor: Colors.red,
                     textColor: Colors.red,
-                    leading: Icon(Icons.logout),
-                    title: Text('Logout'),
+                    leading: const Icon(Icons.logout),
+                    title: const Text('Logout'),
                     onTap: () {
                       Navigator.pop(context);
                     },

@@ -3,11 +3,66 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:decla/widgets/rounded_circular_button.dart';
 import 'package:decla/widgets/rounded_text_form_field.dart';
-import 'package:decla/widgets/google_apple.dart';
 import 'package:flutter/gestures.dart';
 import 'package:decla/pages/login_page.dart';
 
-class PasswordRecovery extends StatelessWidget {
+class PasswordRecovery extends StatefulWidget {
+  @override
+  _PasswordRecoveryState createState() => _PasswordRecoveryState();
+}
+
+class _PasswordRecoveryState extends State<PasswordRecovery> {
+  final _email = TextEditingController();
+
+  @override
+  void dispose() {
+    _email.dispose();
+    super.dispose();
+  }
+
+  void _resetPassword() {
+    final email = _email.text.trim();
+    if (email.isNotEmpty) {
+      // Regular expression for basic email validation
+      final emailRegex = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
+      if (emailRegex.hasMatch(email)) {
+        // Simulate password reset email sent
+        // FirebaseAuth.instance.sendPasswordResetEmail(email: email);
+        debugPrint('Password reset email sent to $email');
+        _showSuccessDialog();
+      } else {
+        debugPrint('Please enter a valid email address');
+      }
+    } else {
+      debugPrint('Please enter an email address');
+    }
+  }
+
+  void _showSuccessDialog() {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Password Reset'),
+          content: Text(
+              'A password reset email has been sent. Please check your email.'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginPage()),
+                );
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -42,16 +97,16 @@ class PasswordRecovery extends StatelessWidget {
             ),
             textAlign: TextAlign.center,
           ),
-          // SizedBox(height: 30),
-          // Text(
-          //   "Enter your email",
-          //   style: TextStyle(
-          //     color: Colors.black,
-          //     fontWeight: FontWeight.bold,
-          //     fontSize: 15,
-          //   ),
-          //   textAlign: TextAlign.center,
-          // ),
+          SizedBox(height: 30),
+          Text(
+            "Enter your email",
+            style: TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+              fontSize: 15,
+            ),
+            textAlign: TextAlign.center,
+          ),
         ],
       ),
     );
@@ -70,7 +125,7 @@ class PasswordRecovery extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               _formFields(context),
-              // _bottomButtons(context),
+              _bottomButtons(context),
             ],
           ),
         ),
@@ -85,22 +140,13 @@ class PasswordRecovery extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Padding(
-            padding:
-                const EdgeInsets.only(left: 22.0), // Add padding to the left
-            child: Text(
-              "Enter your email",
-              style: TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-                fontSize: 15,
-              ),
-            ),
-          ),
           SizedBox(height: 10),
           Center(
             child: RoundedTextFormField(
-                prefixIcon: Icons.email_outlined, hintText: "Email Address"),
+              prefixIcon: Icons.email_outlined,
+              hintText: "Email Address",
+              controller: _email,
+            ),
           ),
           SizedBox(height: 20), // Adding 16 pixels of vertical space
           Center(
@@ -109,6 +155,7 @@ class PasswordRecovery extends StatelessWidget {
               height: MediaQuery.of(context).size.height * 0.05,
               child: RoundedCircularButton(
                 text: "Reset Password",
+                onPressed: _resetPassword,
               ),
             ),
           ),
@@ -117,9 +164,7 @@ class PasswordRecovery extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        LoginPage()), // Ensure LoginPage is correctly imported
+                MaterialPageRoute(builder: (context) => LoginPage()),
               );
             },
             child: Center(
@@ -134,70 +179,51 @@ class PasswordRecovery extends StatelessWidget {
     );
   }
 
-//   Widget _bottomButtons(BuildContext context) {
-//     return Column(
-//       mainAxisSize: MainAxisSize.max,
-//       mainAxisAlignment: MainAxisAlignment.center,
-//       crossAxisAlignment: CrossAxisAlignment.center,
-//       children: [
-//         Padding(
-//           padding: const EdgeInsets.only(top: 30),
-//           child: GestureDetector(
-//             onTap: () {
-//               // Navigator.push(
-//               // context,
-//               // MaterialPageRoute(builder: (context) => SecondPage()),
-//               // );
-//             },
-//             child: RichText(
-//               text: TextSpan(
-//                 style: const TextStyle(
-//                   fontSize: 15,
-//                   fontWeight: FontWeight.w600,
-//                   color: Color.fromRGBO(0, 62, 101, 1),
-//                 ),
-//                 children: [
-//                   TextSpan(text: "Return to "),
-//                   TextSpan(
-//                     text: "login",
-//                     style: TextStyle(
-//                       decoration: TextDecoration.underline,
-//                       color: Color.fromRGBO(0, 148, 240, 1),
-//                     ),
-//                     recognizer: TapGestureRecognizer()
-//                       ..onTap = () {
-//                         // Handle "Sign Up" link tap
-//                         Navigator.push(
-//                           context, // Pass the BuildContext from the widget tree
-//                           MaterialPageRoute(builder: (context) => LoginPage()),
-//                         );
-//                       },
-//                   ),
-//                 ],
-//               ),
-//             ),
-//           ),
-//         )
-//       ],
-//     );
-//   }
+  Widget _bottomButtons(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 30),
+          child: GestureDetector(
+            onTap: () {
+              // Navigator.push(
+              // context,
+              // MaterialPageRoute(builder: (context) => SecondPage()),
+              // );
+            },
+            child: RichText(
+              text: TextSpan(
+                style: const TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: Color.fromRGBO(0, 62, 101, 1),
+                ),
+                children: [
+                  TextSpan(text: "Return to "),
+                  TextSpan(
+                    text: "login",
+                    style: TextStyle(
+                      decoration: TextDecoration.underline,
+                      color: Color.fromRGBO(0, 148, 240, 1),
+                    ),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        // Handle "Sign Up" link tap
+                        Navigator.push(
+                          context, // Pass the BuildContext from the widget tree
+                          MaterialPageRoute(builder: (context) => LoginPage()),
+                        );
+                      },
+                  ),
+                ],
+              ),
+            ),
+          ),
+        )
+      ],
+    );
+  }
 }
-
-// // class SecondPage extends StatelessWidget {
-// //   @override
-// //   Widget build(BuildContext context) {
-// //     return Scaffold(
-// //       appBar: AppBar(
-// //         title: const Text('Second Page'),
-// //       ),
-// //       body: Center(
-// //         child: ElevatedButton(
-// //           onPressed: () {
-// //             Navigator.pop(context); // Go back to the previous page
-// //           },
-// //           child: const Text('Go Back'),
-// //         ),
-// //       ),
-// //     );
-// //   }
-// // }

@@ -3,17 +3,19 @@ import 'package:decla/widgets/bottom_navigation.dart';
 import 'package:decla/pages/chosen_outfit.dart';
 
 class OutfitGenerator extends StatelessWidget {
+  const OutfitGenerator({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context); // Go back to the previous page
           },
         ),
-        title: Text('Your Outfit'),
+        title: const Text('Your Outfit'),
         centerTitle: true,
       ),
       body: Column(
@@ -31,7 +33,7 @@ class OutfitGenerator extends StatelessWidget {
             imagePath: 'assets/images/shoes.png',
             onRotate: () {},
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -39,40 +41,40 @@ class OutfitGenerator extends StatelessWidget {
                   decoration: BoxDecoration(
                     boxShadow: [
                       BoxShadow(
-                        color: Color.fromRGBO(95, 0, 250, 1).withOpacity(0.1),
+                        color: const Color.fromRGBO(95, 0, 250, 1).withOpacity(0.1),
                         spreadRadius: 0,
                         blurRadius: 15,
-                        offset: Offset(0, 0), // changes position of shadow
+                        offset: const Offset(0, 0), // changes position of shadow
                       ),
                     ],
                   ),
                   child: ElevatedButton(
                     onPressed: () {},
                     style: ButtonStyle(
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                      shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(
                               15.0), // Set your desired border radius
                         ),
                       ),
-                      backgroundColor: MaterialStateProperty.all<Color>(
-                        Color.fromRGBO(95, 0, 250, 1),
+                      backgroundColor: WidgetStateProperty.all<Color>(
+                        const Color.fromRGBO(95, 0, 250, 1),
                       ),
-                      padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                        EdgeInsets.all(20),
+                      padding: WidgetStateProperty.all<EdgeInsetsGeometry>(
+                        const EdgeInsets.all(20),
                       ),
                     ),
-                    child: Icon(Icons.refresh, color: Colors.white),
+                    child: const Icon(Icons.refresh, color: Colors.white),
                   )),
-              SizedBox(width: 20),
+              const SizedBox(width: 20),
               Container(
                 decoration: BoxDecoration(
                   boxShadow: [
                     BoxShadow(
-                      color: Color.fromRGBO(255, 46, 46, 1).withOpacity(0.1),
+                      color: const Color.fromRGBO(255, 46, 46, 1).withOpacity(0.1),
                       spreadRadius: 0,
                       blurRadius: 15,
-                      offset: Offset(0, 0), // changes position of shadow
+                      offset: const Offset(0, 0), // changes position of shadow
                     ),
                   ],
                 ),
@@ -80,31 +82,31 @@ class OutfitGenerator extends StatelessWidget {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => ChosenOutfit()),
+                      MaterialPageRoute(builder: (context) => const ChosenOutfit()),
                     );
                   },
                   style: ButtonStyle(
-                    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                    shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                       RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(
                             15.0), // Set your desired border radius
                       ),
                     ),
-                    backgroundColor: MaterialStateProperty.all<Color>(
-                      Color.fromRGBO(255, 46, 46, 1),
+                    backgroundColor: WidgetStateProperty.all<Color>(
+                      const Color.fromRGBO(255, 46, 46, 1),
                     ),
-                    padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
-                      EdgeInsets.all(20),
+                    padding: WidgetStateProperty.all<EdgeInsetsGeometry>(
+                      const EdgeInsets.all(20),
                     ),
                   ),
-                  child: Icon(Icons.favorite, color: Colors.white),
+                  child: const Icon(Icons.favorite, color: Colors.white),
                 ),
               ),
             ],
           ),
         ],
       ),
-      bottomNavigationBar: BottomNavigation(),
+      bottomNavigationBar: const BottomNavigation(),
     );
   }
 }
@@ -113,7 +115,7 @@ class OutfitItem extends StatelessWidget {
   final String imagePath;
   final VoidCallback onRotate;
 
-  OutfitItem({required this.imagePath, required this.onRotate});
+  const OutfitItem({super.key, required this.imagePath, required this.onRotate});
 
   @override
   Widget build(BuildContext context) {
@@ -127,7 +129,7 @@ class OutfitItem extends StatelessWidget {
               color: Colors.white, // White background color
               borderRadius: BorderRadius.circular(100),
               border: Border.all(
-                color: Color.fromRGBO(183, 183, 183, 1),
+                color: const Color.fromRGBO(183, 183, 183, 1),
                 width: 0.5,
               ),
               boxShadow: [
@@ -135,19 +137,19 @@ class OutfitItem extends StatelessWidget {
                   color: const Color.fromARGB(10, 0, 0, 0).withOpacity(0.1),
                   spreadRadius: 0,
                   blurRadius: 15,
-                  offset: Offset(0, 0), // changes position of shadow
+                  offset: const Offset(0, 0), // changes position of shadow
                 ),
               ],
             ),
-            margin: EdgeInsets.only(right: 15),
+            margin: const EdgeInsets.only(right: 15),
             child: ElevatedButton(
               onPressed: () {},
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.white,
-                shape: CircleBorder(),
-                padding: EdgeInsets.all(20),
+                shape: const CircleBorder(),
+                padding: const EdgeInsets.all(20),
               ),
-              child: Icon(Icons.rotate_right, color: Colors.black),
+              child: const Icon(Icons.rotate_right, color: Colors.black),
             ),
           ),
           Container(
@@ -160,18 +162,18 @@ class OutfitItem extends StatelessWidget {
               ),
               borderRadius: BorderRadius.circular(8),
               border:
-                  Border.all(color: Color.fromRGBO(183, 183, 183, 1), width: 2),
+                  Border.all(color: const Color.fromRGBO(183, 183, 183, 1), width: 2),
               boxShadow: [
                 BoxShadow(
                   color: const Color.fromARGB(10, 0, 0, 0).withOpacity(0.1),
                   spreadRadius: 0,
                   blurRadius: 15,
-                  offset: Offset(0, 0), // changes position of shadow
+                  offset: const Offset(0, 0), // changes position of shadow
                 ),
               ],
             ),
           ),
-          IconButton(
+          const IconButton(
             icon: Icon(Icons.rotate_right, color: Colors.transparent),
             onPressed: null,
           ),

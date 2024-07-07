@@ -12,7 +12,7 @@ class BottomNavigation extends StatelessWidget {
             color: const Color.fromARGB(10, 0, 0, 0).withOpacity(0.1),
             spreadRadius: 5,
             blurRadius: 8,
-            offset: Offset(0, 3), // changes position of shadow
+            offset: const Offset(0, 3), // changes position of shadow
           ),
         ],
       ),

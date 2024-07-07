@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class AddItem extends StatefulWidget {
+  const AddItem({super.key});
+
   @override
   _AddItemState createState() => _AddItemState();
 }
@@ -32,13 +34,13 @@ class _AddItemState extends State<AddItem> {
       onTap: () => _handleOptionChange(option),
       child: Container(
         decoration: BoxDecoration(
-          color: _selectedOption == option ? Colors.blue : Color(0xFF8451D7),
+          color: _selectedOption == option ? Colors.blue : const Color(0xFF8451D7),
           border: Border.all(
             color: Colors.white,
           ),
           borderRadius: BorderRadius.circular(30),
         ),
-        padding: EdgeInsets.symmetric(horizontal: 2, vertical: 5),
+        padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 5),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
@@ -48,10 +50,10 @@ class _AddItemState extends State<AddItem> {
                   : Icons.radio_button_unchecked,
               color: Colors.white,
             ),
-            SizedBox(width: 5),
+            const SizedBox(width: 5),
             Text(
               option,
-              style: TextStyle(color: Colors.white),
+              style: const TextStyle(color: Colors.white),
             ),
           ],
         ),
@@ -97,24 +99,24 @@ class _AddItemState extends State<AddItem> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context); // Go back to the previous page
           },
         ),
-        title: Text('Upload Photo'),
+        title: const Text('Upload Photo'),
         centerTitle: true,
       ),
       body: Center(
         child: Column(
           // mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Container(
               width: 300,
               height: 150,
               decoration: BoxDecoration(
-                gradient: LinearGradient(
+                gradient: const LinearGradient(
                   colors: [
                     Color.fromRGBO(172, 124, 250, 1),
                     Color.fromRGBO(158, 118, 246, 1),
@@ -125,7 +127,7 @@ class _AddItemState extends State<AddItem> {
                 ),
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: Row(
+              child: const Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Icon(
@@ -144,13 +146,13 @@ class _AddItemState extends State<AddItem> {
                 ],
               ),
             ),
-            SizedBox(height: 20),
-            Container(
+            const SizedBox(height: 20),
+            SizedBox(
               width: 300,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     'Title',
                     style: TextStyle(
                       color: Color(0xFF8451D7),
@@ -158,15 +160,15 @@ class _AddItemState extends State<AddItem> {
                       fontWeight: FontWeight.bold, // Make the title bold
                     ),
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   Container(
                     decoration: BoxDecoration(
                       color: Colors.white, // Fill the square white
-                      border: Border.all(color: Color(0xFF8451D7)),
+                      border: Border.all(color: const Color(0xFF8451D7)),
                       borderRadius: BorderRadius.circular(8.0),
                     ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 8.0),
                       child: TextField(
                         decoration: InputDecoration(
                           hintText: 'i.e. white sweater',
@@ -177,8 +179,8 @@ class _AddItemState extends State<AddItem> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 20),
-                  Text(
+                  const SizedBox(height: 20),
+                  const Text(
                     'Category',
                     style: TextStyle(
                       color: Color(0xFF8451D7),
@@ -186,8 +188,8 @@ class _AddItemState extends State<AddItem> {
                       fontWeight: FontWeight.bold, // Make the title bold
                     ),
                   ),
-                  SizedBox(height: 10),
-                  Container(
+                  const SizedBox(height: 10),
+                  SizedBox(
                     width: 300,
                     child: Row(
                       children: [
@@ -199,7 +201,7 @@ class _AddItemState extends State<AddItem> {
                             ],
                           ),
                         ),
-                        VerticalDivider(
+                        const VerticalDivider(
                           color: Colors.white,
                           thickness: 2,
                           width: 10,
@@ -212,7 +214,7 @@ class _AddItemState extends State<AddItem> {
                             ],
                           ),
                         ),
-                        VerticalDivider(
+                        const VerticalDivider(
                           color: Colors.white,
                           thickness: 2,
                           width: 10,
@@ -228,8 +230,8 @@ class _AddItemState extends State<AddItem> {
                       ],
                     ),
                   ),
-                  SizedBox(height: 20),
-                  Text(
+                  const SizedBox(height: 20),
+                  const Text(
                     'Color',
                     style: TextStyle(
                       color: Color(0xFF8451D7),
@@ -237,7 +239,7 @@ class _AddItemState extends State<AddItem> {
                       fontWeight: FontWeight.bold, // Make the title bold
                     ),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Container(
                     width: 300,
                     height: 120,
@@ -277,7 +279,7 @@ class _AddItemState extends State<AddItem> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: SizedBox(
@@ -287,16 +289,16 @@ class _AddItemState extends State<AddItem> {
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => AddItem()),
+                            MaterialPageRoute(builder: (context) => const AddItem()),
                           );
                         },
-                        icon: Icon(Icons.add),
-                        label: Text(
+                        icon: const Icon(Icons.add),
+                        label: const Text(
                           'Add Item',
                           style: TextStyle(fontSize: 18),
                         ),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Color.fromRGBO(58, 0, 207, 1),
+                          backgroundColor: const Color.fromRGBO(58, 0, 207, 1),
                           foregroundColor: Colors.white,
                           shape: RoundedRectangleBorder(
                             borderRadius:

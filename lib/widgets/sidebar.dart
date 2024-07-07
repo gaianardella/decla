@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class SidebarNavigation extends StatefulWidget {
-  const SidebarNavigation({Key? key}) : super(key: key);
+  const SidebarNavigation({super.key});
 
   @override
   _SidebarNavigationState createState() => _SidebarNavigationState();
@@ -29,7 +29,7 @@ class _SidebarNavigationState extends State<SidebarNavigation> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            SizedBox(height: 25), // Add space at the top
+            const SizedBox(height: 25), // Add space at the top
             Stack(
               children: [
                 Positioned(
@@ -39,7 +39,7 @@ class _SidebarNavigationState extends State<SidebarNavigation> {
                     onTap: () {
                       Navigator.pop(context);
                     },
-                    child: Icon(
+                    child: const Icon(
                       Icons.close,
                       color: Colors.white,
                       size: 30,
@@ -49,16 +49,16 @@ class _SidebarNavigationState extends State<SidebarNavigation> {
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SizedBox(height: 25),
+                    const SizedBox(height: 25),
                     if (_isEditingProfile)
-                      Text(
+                      const Text(
                         'Profile Editing',
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 16,
                         ),
                       ),
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     GestureDetector(
                       onTap: () {
                         setState(() {
@@ -81,21 +81,21 @@ class _SidebarNavigationState extends State<SidebarNavigation> {
                                         width: 3,
                                       ),
                                     ),
-                                    child: CircleAvatar(
+                                    child: const CircleAvatar(
                                       radius: 50,
                                       backgroundImage: AssetImage(
                                           'assets/images/avatar.png'),
                                     ),
                                   ),
-                                  SizedBox(height: 10),
-                                  Text(
+                                  const SizedBox(height: 10),
+                                  const Text(
                                     'Edit',
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 16,
                                     ),
                                   ),
-                                  Divider(color: Colors.white, thickness: 1),
+                                  const Divider(color: Colors.white, thickness: 1),
                                 ],
                               ),
                             )
@@ -113,14 +113,14 @@ class _SidebarNavigationState extends State<SidebarNavigation> {
                                       width: 3,
                                     ),
                                   ),
-                                  child: CircleAvatar(
+                                  child: const CircleAvatar(
                                     radius: 50,
                                     backgroundImage:
                                         AssetImage('assets/images/avatar.png'),
                                   ),
                                 ),
-                                SizedBox(width: 10),
-                                Text(
+                                const SizedBox(width: 10),
+                                const Text(
                                   'Sofia Nardi',
                                   style: TextStyle(
                                     // color: Color.fromRGBO(39, 39, 39, 1),
@@ -131,19 +131,19 @@ class _SidebarNavigationState extends State<SidebarNavigation> {
                               ],
                             ),
                           if (_isEditingProfile) ...[
-                            SizedBox(height: 10),
+                            const SizedBox(height: 10),
                             Center(
                               child: Column(
                                 // crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
+                                  const Text(
                                     'Full name:',
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 16,
                                     ),
                                   ),
-                                  SizedBox(
+                                  const SizedBox(
                                       height:
                                           8), // Add some space between the text and the form field
                                   Container(
@@ -158,25 +158,25 @@ class _SidebarNavigationState extends State<SidebarNavigation> {
                                           horizontal: 8.0),
                                       child: TextFormField(
                                         // Your form field widget goes here
-                                        decoration: InputDecoration(
+                                        decoration: const InputDecoration(
                                           hintText: 'Enter your full name',
                                           hintStyle:
                                               TextStyle(color: Colors.grey),
                                           border: InputBorder.none,
                                         ),
-                                        style: TextStyle(color: Colors.black),
+                                        style: const TextStyle(color: Colors.black),
                                       ),
                                     ),
                                   ),
-                                  SizedBox(height: 20),
-                                  Text(
+                                  const SizedBox(height: 20),
+                                  const Text(
                                     'Sex:',
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 16,
                                     ),
                                   ),
-                                  SizedBox(height: 10),
+                                  const SizedBox(height: 10),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
@@ -190,11 +190,11 @@ class _SidebarNavigationState extends State<SidebarNavigation> {
                                         },
                                         activeColor: Colors.white,
                                       ),
-                                      Text(
+                                      const Text(
                                         'Male',
                                         style: TextStyle(color: Colors.white),
                                       ),
-                                      SizedBox(width: 20),
+                                      const SizedBox(width: 20),
                                       Radio<String>(
                                         value: 'Female',
                                         groupValue: _selectedSex,
@@ -205,7 +205,7 @@ class _SidebarNavigationState extends State<SidebarNavigation> {
                                         },
                                         activeColor: Colors.white,
                                       ),
-                                      Text(
+                                      const Text(
                                         'Female',
                                         style: TextStyle(color: Colors.white),
                                       ),
@@ -224,13 +224,13 @@ class _SidebarNavigationState extends State<SidebarNavigation> {
             ),
             if (!_isEditingProfile) ...[
               // Other list tiles here
-              SizedBox(height: 10),
-              Divider(color: Colors.white, thickness: 1),
+              const SizedBox(height: 10),
+              const Divider(color: Colors.white, thickness: 1),
               ListTile(
                 iconColor: Colors.white,
                 textColor: Colors.white,
-                leading: Icon(Icons.notification_add),
-                title: Text('Push Notification'),
+                leading: const Icon(Icons.notification_add),
+                title: const Text('Push Notification'),
                 onTap: () {
                   Navigator.pop(context);
                 },
@@ -238,8 +238,8 @@ class _SidebarNavigationState extends State<SidebarNavigation> {
               ListTile(
                 iconColor: Colors.white,
                 textColor: Colors.white,
-                leading: Icon(Icons.language),
-                title: Text('Language'),
+                leading: const Icon(Icons.language),
+                title: const Text('Language'),
                 onTap: () {
                   Navigator.pop(context);
                 },
@@ -247,8 +247,8 @@ class _SidebarNavigationState extends State<SidebarNavigation> {
               ListTile(
                 iconColor: Colors.white,
                 textColor: Colors.white,
-                leading: Icon(Icons.help),
-                title: Text('Help'),
+                leading: const Icon(Icons.help),
+                title: const Text('Help'),
                 onTap: () {
                   Navigator.pop(context);
                 },
@@ -256,8 +256,8 @@ class _SidebarNavigationState extends State<SidebarNavigation> {
               ListTile(
                 iconColor: Colors.white,
                 textColor: Colors.white,
-                leading: Icon(Icons.rule),
-                title: Text('Terms os use'),
+                leading: const Icon(Icons.rule),
+                title: const Text('Terms os use'),
                 onTap: () {
                   Navigator.pop(context);
                 },
@@ -265,8 +265,8 @@ class _SidebarNavigationState extends State<SidebarNavigation> {
               ListTile(
                 iconColor: Colors.white,
                 textColor: Colors.white,
-                leading: Icon(Icons.policy),
-                title: Text('Privacy Policy'),
+                leading: const Icon(Icons.policy),
+                title: const Text('Privacy Policy'),
                 onTap: () {
                   Navigator.pop(context);
                 },
@@ -274,8 +274,8 @@ class _SidebarNavigationState extends State<SidebarNavigation> {
               ListTile(
                 iconColor: Colors.white,
                 textColor: Colors.white,
-                leading: Icon(Icons.verified),
-                title: Text('Version'),
+                leading: const Icon(Icons.verified),
+                title: const Text('Version'),
                 onTap: () {
                   Navigator.pop(context);
                 },
@@ -283,14 +283,14 @@ class _SidebarNavigationState extends State<SidebarNavigation> {
               ListTile(
                 iconColor: Colors.red,
                 textColor: Colors.red,
-                leading: Icon(Icons.logout),
-                title: Text('Logout'),
+                leading: const Icon(Icons.logout),
+                title: const Text('Logout'),
                 onTap: () {
                   Navigator.pop(context);
                 },
               ),
-              SizedBox(height: 10),
-              Divider(color: Colors.white, thickness: 1),
+              const SizedBox(height: 10),
+              const Divider(color: Colors.white, thickness: 1),
             ],
           ],
         ),

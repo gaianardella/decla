@@ -32,7 +32,7 @@ class HomePage extends StatelessWidget {
       ),
       drawer: const SidebarNavigation(),
       body: _buildUI(context),
-      bottomNavigationBar: BottomNavigation(),
+      bottomNavigationBar: const BottomNavigation(),
     );
   }
 }
@@ -98,7 +98,7 @@ Widget _functionsButton(BuildContext context) {
                   // Navigate to the OutfitGenerator function
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => OutfitGenerator()),
+                    MaterialPageRoute(builder: (context) => const OutfitGenerator()),
                   );
                 },
               ),
@@ -129,7 +129,7 @@ Widget _functionsButton(BuildContext context) {
                 ),
                 Container(
                   decoration: BoxDecoration(
-                    color: Color.fromRGBO(151, 71, 255, 1)
+                    color: const Color.fromRGBO(151, 71, 255, 1)
                         .withOpacity(0.8), // Add color overlay with opacity
                     borderRadius:
                         BorderRadius.circular(10), // Add same border radius
@@ -160,7 +160,7 @@ Widget _functionsButton(BuildContext context) {
                       // Navigate to the OutfitGenerator function
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => ManageCloset()),
+                        MaterialPageRoute(builder: (context) => const ManageCloset()),
                       );
                     },
                   ),
@@ -168,13 +168,13 @@ Widget _functionsButton(BuildContext context) {
               ],
             ),
           ),
-          SizedBox(width: 20),
+          const SizedBox(width: 20),
           // Adjust the space between squares
           GestureDetector(
             onTap: () {
               // Handle tap action here
             },
-            child: Container(
+            child: SizedBox(
               width: 170,
               height: 170,
               child: Stack(
@@ -192,7 +192,7 @@ Widget _functionsButton(BuildContext context) {
                   ),
                   Container(
                     decoration: BoxDecoration(
-                      color: Color.fromRGBO(64, 135, 237, 1)
+                      color: const Color.fromRGBO(64, 135, 237, 1)
                           .withOpacity(0.8), // Add color overlay with opacity
                       borderRadius:
                           BorderRadius.circular(10), // Add same border radius
@@ -224,7 +224,7 @@ Widget _functionsButton(BuildContext context) {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => DeclutterCloset()),
+                              builder: (context) => const DeclutterCloset()),
                         );
                       },
                     ),

@@ -3,6 +3,8 @@ import 'package:decla/pages/home.dart';
 import 'package:decla/pages/add_item.dart';
 
 class ManageCloset extends StatelessWidget {
+  const ManageCloset({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -10,7 +12,7 @@ class ManageCloset extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomeScreen(),
+      home: const HomeScreen(),
     );
   }
 }
@@ -18,12 +20,14 @@ class ManageCloset extends StatelessWidget {
 void navigateToHome(BuildContext context) {
   Navigator.pushAndRemoveUntil(
     context,
-    MaterialPageRoute(builder: (context) => HomePage()),
+    MaterialPageRoute(builder: (context) => const HomePage()),
     (Route<dynamic> route) => false,
   );
 }
 
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -52,17 +56,17 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             navigateToHome(
                 context); // Navigate back to the home screen using the navigateToHome function
           },
         ),
-        title: Text('Your Outfit'),
+        title: const Text('Your Outfit'),
         centerTitle: true,
         backgroundColor: Colors.white,
       ),
-      backgroundColor: Color.fromRGBO(235, 235, 235, 1),
+      backgroundColor: const Color.fromRGBO(235, 235, 235, 1),
       body: Column(
         children: [
           Padding(
@@ -72,13 +76,13 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Row(
                 children: [
                   _buildFilterChip('All'),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                   _buildFilterChip('top'),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                   _buildFilterChip('bottom'),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                   _buildFilterChip('shoes'),
-                  SizedBox(width: 8),
+                  const SizedBox(width: 8),
                   // Add more FilterChips as needed
                 ],
               ),
@@ -93,7 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(
                         4.0), // Match the Card's border radius if any
-                    boxShadow: [
+                    boxShadow: const [
                       BoxShadow(
                         color: Color.fromRGBO(176, 176, 176, 0.2),
                         spreadRadius: -6,
@@ -105,10 +109,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Card(
                     color: Colors.white,
                     margin:
-                        EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                        const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
                     child: Center(
                       child: ListTile(
-                        leading: Container(
+                        leading: SizedBox(
                             width: 80,
                             child: Image.asset(
                               items[index]['image']!,
@@ -119,7 +123,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(
                                 8.0), // Set border radius for the container
-                            boxShadow: [
+                            boxShadow: const [
                               BoxShadow(
                                 color: Color.fromRGBO(176, 176, 176, 1),
                                 spreadRadius: -6,
@@ -128,7 +132,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     Offset(0, 0), // changes position of shadow
                               ),
                             ],
-                            gradient: LinearGradient(
+                            gradient: const LinearGradient(
                               colors: [
                                 Color.fromRGBO(255, 120, 120, 1),
                                 Color.fromRGBO(255, 46, 46, 1)
@@ -138,7 +142,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ),
                           child: IconButton(
-                            icon: Icon(Icons.delete_outline,
+                            icon: const Icon(Icons.delete_outline,
                                 color: Colors
                                     .white), // Set white color for the icon
                             onPressed: () => _deleteItem(index),
@@ -160,16 +164,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => AddItem()),
+                    MaterialPageRoute(builder: (context) => const AddItem()),
                   );
                 },
-                icon: Icon(Icons.add),
-                label: Text(
+                icon: const Icon(Icons.add),
+                label: const Text(
                   'Add More Items',
                   style: TextStyle(fontSize: 18),
                 ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Color.fromRGBO(58, 0, 207, 1),
+                  backgroundColor: const Color.fromRGBO(58, 0, 207, 1),
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius:
@@ -193,7 +197,7 @@ class _HomeScreenState extends State<HomeScreen> {
             color: Colors.black.withOpacity(0.04),
             spreadRadius: 0,
             blurRadius: 8,
-            offset: Offset(0, 0), // changes position of shadow
+            offset: const Offset(0, 0), // changes position of shadow
           ),
         ],
       ),
@@ -210,7 +214,7 @@ class _HomeScreenState extends State<HomeScreen> {
             _selectedChip = selected ? label : '';
           });
         },
-        selectedColor: Color.fromRGBO(0, 219, 146, 1),
+        selectedColor: const Color.fromRGBO(0, 219, 146, 1),
         backgroundColor: Colors.white,
         checkmarkColor: Colors.white,
         side: BorderSide

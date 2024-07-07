@@ -5,13 +5,13 @@ class SquareTile extends StatelessWidget {
   final String imagePath;
 
   const SquareTile({
-    Key? key,
+    super.key,
     required this.imagePath,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: 55, // Set a fixed width for the square tile
       height: 55, // Set a fixed height for the square tile
       child: SvgPicture.asset(
