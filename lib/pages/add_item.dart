@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:typed_data';
 
 class AddItem extends StatefulWidget {
   const AddItem({super.key});
@@ -7,10 +11,11 @@ class AddItem extends StatefulWidget {
   _AddItemState createState() => _AddItemState();
 }
 
-// class AddItem extends StatelessWidget {
 class _AddItemState extends State<AddItem> {
   String _selectedOption = '';
   Color _selectedColor = Colors.transparent;
+  Uint8List? _imageBytes;
+  final TextEditingController _titleController = TextEditingController();
 
   void _handleOptionChange(String value) {
     setState(() {
@@ -25,8 +30,122 @@ class _AddItemState extends State<AddItem> {
   }
 
   bool _isDarkColor(Color color) {
-    // Calculate the brightness of the color
     return color.computeLuminance() < 0.5;
+  }
+
+  Future<void> _pickImage(ImageSource source) async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: source);
+
+    if (pickedFile != null) {
+      setState(() async {
+        _imageBytes = await pickedFile.readAsBytes();
+      });
+    }
+  }
+
+  Future<void> _showImageSourceActionSheet(BuildContext context) async {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => SafeArea(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.camera_alt),
+              title: const Text('Take a photo'),
+              onTap: () {
+                Navigator.pop(context);
+                _pickImage(ImageSource.camera);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.photo_library),
+              title: const Text('Choose from gallery'),
+              onTap: () {
+                Navigator.pop(context);
+                _pickImage(ImageSource.gallery);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _uploadImage() async {
+    if (_imageBytes == null) return;
+
+    String fileName =
+        'images/${_titleController.text}_${_selectedOption}_${_selectedColor.value}_${DateTime.now().millisecondsSinceEpoch}.jpg';
+
+    try {
+      // Upload image to Firebase Storage
+      await FirebaseStorage.instance
+          .ref(fileName)
+          .putData(_imageBytes!, SettableMetadata(contentType: 'image/jpeg'));
+
+      // Get the download URL
+      String downloadURL =
+          await FirebaseStorage.instance.ref(fileName).getDownloadURL();
+
+      // Save the URL and metadata to Firestore
+      await FirebaseFirestore.instance.collection('images').add({
+        'title': _titleController.text,
+        'category': _selectedOption,
+        'color': _selectedColor.value.toString(),
+        'url': downloadURL,
+        'uploaded_at': DateTime.now(),
+      });
+
+      print('Upload successful');
+    } catch (e) {
+      print('Error uploading image: $e');
+    }
+  }
+
+  void _saveItem() {
+    String title = _titleController.text;
+    String category = _selectedOption;
+    Color color = _selectedColor;
+
+    if (_imageBytes == null) {
+      _showErrorSnackbar('Please select an image.');
+      return;
+    }
+
+    if (title.isEmpty) {
+      _showErrorSnackbar('Please enter a title.');
+      return;
+    }
+
+    if (category.isEmpty) {
+      _showErrorSnackbar('Please select a category.');
+      return;
+    }
+
+    if (color == Colors.transparent) {
+      _showErrorSnackbar('Please select a color.');
+      return;
+    }
+
+    // Upload image and save item metadata
+    _uploadImage();
+
+    // For debugging
+    print('Title: $title');
+    print('Category: $category');
+    print('Color: $color');
+    print('Image Path: $_imageBytes');
+  }
+
+  void _showErrorSnackbar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+      ),
+    );
   }
 
   Widget _buildOption(String option) {
@@ -34,7 +153,8 @@ class _AddItemState extends State<AddItem> {
       onTap: () => _handleOptionChange(option),
       child: Container(
         decoration: BoxDecoration(
-          color: _selectedOption == option ? Colors.blue : const Color(0xFF8451D7),
+          color:
+              _selectedOption == option ? Colors.blue : const Color(0xFF8451D7),
           border: Border.all(
             color: Colors.white,
           ),
@@ -108,210 +228,193 @@ class _AddItemState extends State<AddItem> {
         centerTitle: true,
       ),
       body: Center(
-        child: Column(
-          // mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const SizedBox(height: 10),
-            Container(
-              width: 300,
-              height: 150,
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [
-                    Color.fromRGBO(172, 124, 250, 1),
-                    Color.fromRGBO(158, 118, 246, 1),
-                    Color.fromRGBO(96, 55, 201, 1),
-                  ],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ),
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.camera_alt,
-                    size: 50,
-                    color: Colors.white,
-                  ),
-                  SizedBox(width: 10),
-                  Text(
-                    'Upload',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const SizedBox(height: 10),
+              GestureDetector(
+                onTap: () => _showImageSourceActionSheet(context),
+                child: Container(
+                  width: 300,
+                  height: 150,
+                  decoration: BoxDecoration(
+                    gradient: const LinearGradient(
+                      colors: [
+                        Color.fromRGBO(172, 124, 250, 1),
+                        Color.fromRGBO(158, 118, 246, 1),
+                        Color.fromRGBO(96, 55, 201, 1),
+                      ],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
                     ),
+                    borderRadius: BorderRadius.circular(20),
                   ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 20),
-            SizedBox(
-              width: 300,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Title',
-                    style: TextStyle(
-                      color: Color(0xFF8451D7),
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold, // Make the title bold
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white, // Fill the square white
-                      border: Border.all(color: const Color(0xFF8451D7)),
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8.0),
-                      child: TextField(
-                        decoration: InputDecoration(
-                          hintText: 'i.e. white sweater',
-                          hintStyle: TextStyle(color: Color(0xFFE3CEFF)),
-                          border: InputBorder.none,
+                  child: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.camera_alt,
+                        size: 50,
+                        color: Colors.white,
+                      ),
+                      SizedBox(width: 10),
+                      Text(
+                        'Upload',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
                         ),
-                        style: TextStyle(color: Colors.black),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20),
+              const SizedBox(height: 20),
+              SizedBox(
+                width: 300,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Title',
+                      style: TextStyle(
+                        color: Color(0xFF8451D7),
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold, // Make the title bold
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                  const Text(
-                    'Category',
-                    style: TextStyle(
-                      color: Color(0xFF8451D7),
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold, // Make the title bold
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  SizedBox(
-                    width: 300,
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Column(
-                            children: [
-                              _buildOption('Sweater'),
-                              _buildOption('T-Shirt'),
-                            ],
+                    const SizedBox(height: 20),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white, // Fill the square white
+                        border: Border.all(color: const Color(0xFF8451D7)),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: TextField(
+                          controller: _titleController,
+                          decoration: const InputDecoration(
+                            hintText: 'i.e. white sweater',
+                            hintStyle: TextStyle(color: Color(0xFFE3CEFF)),
+                            border: InputBorder.none,
                           ),
+                          style: const TextStyle(color: Colors.black),
                         ),
-                        const VerticalDivider(
-                          color: Colors.white,
-                          thickness: 2,
-                          width: 10,
-                        ),
-                        Expanded(
-                          child: Column(
-                            children: [
-                              _buildOption('Trousers'),
-                              _buildOption('Skirt'),
-                            ],
-                          ),
-                        ),
-                        const VerticalDivider(
-                          color: Colors.white,
-                          thickness: 2,
-                          width: 10,
-                        ),
-                        Expanded(
-                          child: Column(
-                            children: [
-                              _buildOption('Shoes'),
-                              _buildOption('Sandals'),
-                            ],
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                  const Text(
-                    'Color',
-                    style: TextStyle(
-                      color: Color(0xFF8451D7),
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold, // Make the title bold
+                    const SizedBox(height: 20),
+                    const Text(
+                      'Category',
+                      style: TextStyle(
+                        color: Color(0xFF8451D7),
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold, // Make the title bold
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  Container(
-                    width: 300,
-                    height: 120,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      // border: Border.all(color: Color(0xFF8451D7)),
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      width: 300,
+                      child: Row(
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: _buildColorCircles([
-                              Colors.blue,
-                              Colors.red,
-                              Colors.yellow,
-                              Colors.orange,
-                              Colors.pink,
-                              Colors.purple
-                            ]),
+                          Expanded(
+                            child: Column(
+                              children: [
+                                _buildOption('Sweater'),
+                                _buildOption('T-Shirt'),
+                              ],
+                            ),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: _buildColorCircles([
-                              Colors.green,
-                              Colors.indigo.shade900,
-                              Colors.grey,
-                              Colors.black,
-                              Colors.brown,
-                              Colors.white, //aggiungere bordon con spunta nera
-                            ]),
+                          const VerticalDivider(
+                            color: Colors.white,
+                            thickness: 2,
+                            width: 10,
+                          ),
+                          Expanded(
+                            child: Column(
+                              children: [
+                                _buildOption('Trousers'),
+                                _buildOption('Skirt'),
+                              ],
+                            ),
+                          ),
+                          const VerticalDivider(
+                            color: Colors.white,
+                            thickness: 2,
+                            width: 10,
+                          ),
+                          Expanded(
+                            child: Column(
+                              children: [
+                                _buildOption('Shoes'),
+                                _buildOption('Sandals'),
+                              ],
+                            ),
                           ),
                         ],
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 10),
-                  Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: SizedBox(
-                      width: double.infinity, // Set the desired width
-                      height: 50, // Set the desired height
-                      child: ElevatedButton.icon(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => const AddItem()),
-                          );
-                        },
-                        icon: const Icon(Icons.add),
-                        label: const Text(
-                          'Add Item',
-                          style: TextStyle(fontSize: 18),
-                        ),
+                    const SizedBox(height: 20),
+                    const Text(
+                      'Color',
+                      style: TextStyle(
+                        color: Color(0xFF8451D7),
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold, // Make the title bold
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      width: 300,
+                      child: Wrap(
+                        spacing: 10,
+                        runSpacing: 10,
+                        children: _buildColorCircles([
+                          Colors.red,
+                          Colors.green,
+                          Colors.blue,
+                          Colors.yellow,
+                          Colors.orange,
+                          Colors.purple,
+                          Colors.black,
+                          Colors.white,
+                          Colors.brown,
+                          Colors.pink,
+                          Colors.cyan,
+                          Colors.lime,
+                          Colors.indigo,
+                          Colors.grey,
+                          Colors.teal,
+                        ]),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    Center(
+                      child: ElevatedButton(
+                        onPressed: _saveItem,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color.fromRGBO(58, 0, 207, 1),
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(8.0), // Set border radius
+                          backgroundColor: const Color(0xFF8451D7),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 40,
+                            vertical: 10,
                           ),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                        child: const Text(
+                          'Save',
+                          style: TextStyle(fontSize: 20),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 20),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
