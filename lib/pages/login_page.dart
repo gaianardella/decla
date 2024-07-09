@@ -1,18 +1,17 @@
 import 'package:decla/pages/password_recovery.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:decla/widgets/rounded_circular_button.dart';
 import 'package:decla/widgets/rounded_text_form_field.dart';
 import 'package:decla/widgets/google_apple.dart';
 import 'package:flutter/gestures.dart';
 import 'package:decla/pages/signup_page.dart';
 import 'package:decla/pages/home.dart';
-import 'dart:developer';
 import 'package:decla/pages/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -64,7 +63,7 @@ class _LoginPageState extends State<LoginPage> {
         debugPrint('User signed in successfully: ${user.email}');
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => HomePage()),
+          MaterialPageRoute(builder: (context) => const HomePage()),
         );
       } else {
         _showErrorDialog('User is null after sign in');
@@ -89,11 +88,11 @@ class _LoginPageState extends State<LoginPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Error'),
+          title: const Text('Error'),
           content: Text(message),
           actions: <Widget>[
             TextButton(
-              child: Text('OK'),
+              child: const Text('OK'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -185,13 +184,13 @@ class _LoginPageState extends State<LoginPage> {
               prefixIcon: Icons.email_outlined,
               hintText: "Email Address",
               controller: _email),
-          SizedBox(height: 16), // Adding 16 pixels of vertical space
+          const SizedBox(height: 16), // Adding 16 pixels of vertical space
           RoundedTextFormField(
               prefixIcon: Icons.lock_outline,
               hintText: "Password",
               obsecureText: true,
               controller: _password),
-          SizedBox(height: 20), // Adding 16 pixels of vertical space
+          const SizedBox(height: 20), // Adding 16 pixels of vertical space
           SizedBox(
             width: MediaQuery.of(context).size.width * 0.80,
             height: MediaQuery.of(context).size.height * 0.07,
@@ -200,17 +199,17 @@ class _LoginPageState extends State<LoginPage> {
               onPressed: signInWithEmailAndPassword, //printControllerValues,
             ),
           ),
-          SizedBox(height: 16), // Adding 16 pixels of vertical space
+          const SizedBox(height: 16), // Adding 16 pixels of vertical space
           GestureDetector(
             onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) =>
-                        PasswordRecovery()), // Ensure LoginPage is correctly imported
+                        const PasswordRecovery()), // Ensure LoginPage is correctly imported
               );
             },
-            child: Text(
+            child: const Text(
               "Forgot Password?",
               style: TextStyle(color: Colors.blue, fontSize: 15),
             ),
@@ -260,7 +259,7 @@ class _LoginPageState extends State<LoginPage> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => SecondPage()),
+                MaterialPageRoute(builder: (context) => const SecondPage()),
               );
             },
             child: RichText(
@@ -271,10 +270,10 @@ class _LoginPageState extends State<LoginPage> {
                   color: Color.fromRGBO(0, 62, 101, 1),
                 ),
                 children: [
-                  TextSpan(text: "Don't have an account? "),
+                  const TextSpan(text: "Don't have an account? "),
                   TextSpan(
                     text: "Sign Up",
-                    style: TextStyle(
+                    style: const TextStyle(
                       decoration: TextDecoration.underline,
                       color: Color.fromRGBO(0, 148, 240, 1),
                     ),
@@ -283,7 +282,7 @@ class _LoginPageState extends State<LoginPage> {
                         // Handle "Sign Up" link tap
                         Navigator.push(
                           context, // Pass the BuildContext from the widget tree
-                          MaterialPageRoute(builder: (context) => SignupPage()),
+                          MaterialPageRoute(builder: (context) => const SignupPage()),
                         );
                       },
                   ),

@@ -3,12 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:decla/pages/home.dart';
 import 'package:decla/pages/login_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:decla/widgets/rounded_circular_button.dart';
 import 'package:decla/widgets/rounded_text_form_field.dart';
 import 'package:decla/widgets/google_apple.dart';
 import 'package:flutter/gestures.dart';
-import 'dart:developer';
 
 class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
@@ -61,7 +59,7 @@ class _SignupPageState extends State<SignupPage> {
         debugPrint('User signed up successfully: ${user.email}');
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => HomePage()),
+          MaterialPageRoute(builder: (context) => const HomePage()),
         );
       } else {
         _showErrorDialog('User is null after sign up');
@@ -91,11 +89,11 @@ class _SignupPageState extends State<SignupPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Error'),
+          title: const Text('Error'),
           content: Text(message),
           actions: <Widget>[
             TextButton(
-              child: Text('OK'),
+              child: const Text('OK'),
               onPressed: () {
                 Navigator.of(context).pop();
               },
@@ -235,7 +233,7 @@ class _SignupPageState extends State<SignupPage> {
           if (errorMessage != null && errorMessage!.isNotEmpty)
             Text(
               errorMessage!,
-              style: TextStyle(color: Colors.red),
+              style: const TextStyle(color: Colors.red),
             ), // Adding 16 pixels of vertical space
         ],
       ),
@@ -305,7 +303,7 @@ class _SignupPageState extends State<SignupPage> {
                         // Handle "Sign Up" link tap
                         Navigator.push(
                           context, // Pass the BuildContext from the widget tree
-                          MaterialPageRoute(builder: (context) => LoginPage()),
+                          MaterialPageRoute(builder: (context) => const LoginPage()),
                         );
                       },
                   ),

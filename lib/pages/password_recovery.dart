@@ -1,12 +1,12 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:decla/widgets/rounded_circular_button.dart';
 import 'package:decla/widgets/rounded_text_form_field.dart';
 import 'package:flutter/gestures.dart';
 import 'package:decla/pages/login_page.dart';
 
 class PasswordRecovery extends StatefulWidget {
+  const PasswordRecovery({super.key});
+
   @override
   _PasswordRecoveryState createState() => _PasswordRecoveryState();
 }
@@ -43,17 +43,17 @@ class _PasswordRecoveryState extends State<PasswordRecovery> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Password Reset'),
-          content: Text(
+          title: const Text('Password Reset'),
+          content: const Text(
               'A password reset email has been sent. Please check your email.'),
           actions: <Widget>[
             TextButton(
-              child: Text('OK'),
+              child: const Text('OK'),
               onPressed: () {
                 Navigator.of(context).pop();
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => LoginPage()),
+                  MaterialPageRoute(builder: (context) => const LoginPage()),
                 );
               },
             ),
@@ -63,6 +63,7 @@ class _PasswordRecoveryState extends State<PasswordRecovery> {
     );
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -85,7 +86,7 @@ class _PasswordRecoveryState extends State<PasswordRecovery> {
         top: MediaQuery.of(context).size.height * 0.15,
         bottom: MediaQuery.of(context).size.height * 0,
       ),
-      child: Column(
+      child: const Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
@@ -140,7 +141,7 @@ class _PasswordRecoveryState extends State<PasswordRecovery> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Center(
             child: RoundedTextFormField(
               prefixIcon: Icons.email_outlined,
@@ -148,7 +149,7 @@ class _PasswordRecoveryState extends State<PasswordRecovery> {
               controller: _email,
             ),
           ),
-          SizedBox(height: 20), // Adding 16 pixels of vertical space
+          const SizedBox(height: 20), // Adding 16 pixels of vertical space
           Center(
             child: SizedBox(
               width: MediaQuery.of(context).size.width * 0.60,
@@ -159,15 +160,15 @@ class _PasswordRecoveryState extends State<PasswordRecovery> {
               ),
             ),
           ),
-          SizedBox(height: 20), // Adding 16 pixels of vertical space
+          const SizedBox(height: 20), // Adding 16 pixels of vertical space
           GestureDetector(
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => LoginPage()),
+                MaterialPageRoute(builder: (context) => const LoginPage()),
               );
             },
-            child: Center(
+            child: const Center(
               child: Text(
                 "Return to login",
                 style: TextStyle(color: Colors.blue, fontSize: 12),
@@ -202,10 +203,10 @@ class _PasswordRecoveryState extends State<PasswordRecovery> {
                   color: Color.fromRGBO(0, 62, 101, 1),
                 ),
                 children: [
-                  TextSpan(text: "Return to "),
+                  const TextSpan(text: "Return to "),
                   TextSpan(
                     text: "login",
-                    style: TextStyle(
+                    style: const TextStyle(
                       decoration: TextDecoration.underline,
                       color: Color.fromRGBO(0, 148, 240, 1),
                     ),
@@ -214,7 +215,7 @@ class _PasswordRecoveryState extends State<PasswordRecovery> {
                         // Handle "Sign Up" link tap
                         Navigator.push(
                           context, // Pass the BuildContext from the widget tree
-                          MaterialPageRoute(builder: (context) => LoginPage()),
+                          MaterialPageRoute(builder: (context) => const LoginPage()),
                         );
                       },
                   ),
