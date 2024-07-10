@@ -95,7 +95,8 @@ class _SidebarNavigationState extends State<SidebarNavigation> {
                                       fontSize: 16,
                                     ),
                                   ),
-                                  const Divider(color: Colors.white, thickness: 1),
+                                  const Divider(
+                                      color: Colors.white, thickness: 1),
                                 ],
                               ),
                             )
@@ -164,7 +165,8 @@ class _SidebarNavigationState extends State<SidebarNavigation> {
                                               TextStyle(color: Colors.grey),
                                           border: InputBorder.none,
                                         ),
-                                        style: const TextStyle(color: Colors.black),
+                                        style: const TextStyle(
+                                            color: Colors.black),
                                       ),
                                     ),
                                   ),
