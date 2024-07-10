@@ -108,8 +108,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   child: Card(
                     color: Colors.white,
-                    margin:
-                        const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                    margin: const EdgeInsets.symmetric(
+                        vertical: 8.0, horizontal: 16.0),
                     child: Center(
                       child: ListTile(
                         leading: SizedBox(
@@ -164,7 +164,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const AddItem()),
+                    MaterialPageRoute(builder: (context) => AddItem()),
                   );
                 },
                 icon: const Icon(Icons.add),
