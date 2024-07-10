@@ -3,6 +3,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:typed_data';
+import 'package:decla/pages/success_page.dart';
 
 class AddItem extends StatefulWidget {
   const AddItem({super.key});
@@ -133,10 +134,16 @@ class _AddItemState extends State<AddItem> {
     _uploadImage();
 
     // For debugging
+    print("_SaveItem");
     print('Title: $title');
     print('Category: $category');
     print('Color: $color');
-    print('Image Path: $_imageBytes');
+    // print('Image Path: $_imageBytes');
+    // Navigate to SuccessPage on successful upload
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const SuccessPage()),
+    );
   }
 
   void _showErrorSnackbar(String message) {
@@ -227,6 +234,7 @@ class _AddItemState extends State<AddItem> {
         title: const Text('Upload Photo'),
         centerTitle: true,
       ),
+      backgroundColor: const Color.fromRGBO(235, 235, 235, 1),
       body: Center(
         child: SingleChildScrollView(
           child: Column(
@@ -365,47 +373,122 @@ class _AddItemState extends State<AddItem> {
                       ),
                     ),
                     const SizedBox(height: 10),
-                    SizedBox(
+                    // Container(
+                    //   width: 300,
+                    //   height: 120,
+                    //   decoration: BoxDecoration(
+                    //     color: Colors.white,
+                    //     // border: Border.all(color: Color(0xFF8451D7)),
+                    //     borderRadius: BorderRadius.circular(8.0),
+                    //   ),
+                    //   child: Center(
+                    //     child: SizedBox(
+                    //       width: 300,
+                    //       child: Wrap(
+                    //         spacing: 10,
+                    //         runSpacing: 10,
+                    //         children: _buildColorCircles([
+                    //           Colors.red,
+                    //           Colors.green,
+                    //           Colors.blue,
+                    //           Colors.yellow,
+                    //           Colors.orange,
+                    //           Colors.purple,
+                    //           Colors.black,
+                    //           Colors.white,
+                    //           Colors.brown,
+                    //           Colors.pink,
+                    //           Colors.cyan,
+                    //           Colors.lime,
+                    //           Colors.indigo,
+                    //           Colors.grey,
+                    //           Colors.teal,
+                    //         ]),
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
+                    Container(
                       width: 300,
-                      child: Wrap(
-                        spacing: 10,
-                        runSpacing: 10,
-                        children: _buildColorCircles([
-                          Colors.red,
-                          Colors.green,
-                          Colors.blue,
-                          Colors.yellow,
-                          Colors.orange,
-                          Colors.purple,
-                          Colors.black,
-                          Colors.white,
-                          Colors.brown,
-                          Colors.pink,
-                          Colors.cyan,
-                          Colors.lime,
-                          Colors.indigo,
-                          Colors.grey,
-                          Colors.teal,
-                        ]),
+                      height: 120,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        // border: Border.all(color: Color(0xFF8451D7)),
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: _buildColorCircles([
+                                Colors.green,
+                                Colors.blue,
+                                Colors.yellow,
+                                Colors.orange,
+                                Colors.purple,
+                                Colors.black,
+                                Colors.white,
+                              ]),
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: _buildColorCircles([
+                                Colors.brown,
+                                Colors.pink,
+                                Colors.cyan,
+                                Colors.lime,
+                                Colors.indigo,
+                                Colors.grey,
+                                Colors.teal,
+                              ]),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                     const SizedBox(height: 20),
-                    Center(
-                      child: ElevatedButton(
-                        onPressed: _saveItem,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF8451D7),
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 40,
-                            vertical: 10,
+                    // Center(
+                    //   child: ElevatedButton(
+                    //     onPressed: _saveItem,
+                    //     style: ElevatedButton.styleFrom(
+                    //       backgroundColor: const Color(0xFF8451D7),
+                    //       padding: const EdgeInsets.symmetric(
+                    //         horizontal: 40,
+                    //         vertical: 10,
+                    //       ),
+                    //       shape: RoundedRectangleBorder(
+                    //         borderRadius: BorderRadius.circular(20),
+                    //       ),
+                    //     ),
+                    //     child: const Text(
+                    //       'Save',
+                    //       style: TextStyle(fontSize: 20),
+                    //     ),
+                    //   ),
+                    // ),
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: SizedBox(
+                        width: double.infinity, // Set the desired width
+                        height: 50, // Set the desired height
+                        child: ElevatedButton.icon(
+                          onPressed: _saveItem,
+                          icon: Icon(Icons.add),
+                          label: Text(
+                            'Add Item',
+                            style: TextStyle(fontSize: 18),
                           ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color.fromRGBO(58, 0, 207, 1),
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                  8.0), // Set border radius
+                            ),
                           ),
-                        ),
-                        child: const Text(
-                          'Save',
-                          style: TextStyle(fontSize: 20),
                         ),
                       ),
                     ),

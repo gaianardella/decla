@@ -1,4 +1,4 @@
-import 'package:decla/pages/signup_page.dart';
+import 'package:decla/pages/login_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
@@ -63,7 +63,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       // home: HomePage(),
-      home: const SignupPage(),
+      home: const LoginPage(),
     );
   }
 }
