@@ -804,6 +804,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:decla/pages/home.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -837,6 +838,14 @@ class DeclutterCloset extends StatelessWidget {
       home: HomeScreen(),
     );
   }
+}
+
+void navigateToHome(BuildContext context) {
+  Navigator.pushAndRemoveUntil(
+    context,
+    MaterialPageRoute(builder: (context) => const HomePage()),
+    (Route<dynamic> route) => false,
+  );
 }
 
 class HomeScreen extends StatefulWidget {
@@ -971,7 +980,8 @@ class _HomeScreenState extends State<HomeScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            Navigator.pop(context); // Navigate back to the previous screen
+            navigateToHome(
+                context); // Navigate back to the home screen using the navigateToHome function
           },
         ),
         title: const Text("Items you don't use"),
