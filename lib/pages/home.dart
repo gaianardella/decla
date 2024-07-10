@@ -1,240 +1,312 @@
-import 'package:decla/pages/outfit_generator.dart';
-import 'package:decla/pages/manage_closet.dart';
-import 'package:decla/pages/declutter_closet.dart';
 import 'package:flutter/material.dart';
-import 'package:decla/widgets/sidebar.dart';
 import 'package:decla/widgets/bottom_navigation.dart';
+import 'package:decla/pages/chosen_outfit.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+// void main() async {
+//   WidgetsFlutterBinding.ensureInitialized();
+//   await Firebase.initializeApp();
+//   runApp(OutfitGenerator());
+// }
+
+class OutfitGenerator extends StatelessWidget {
+  const OutfitGenerator({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color.fromRGBO(235, 235, 235, 1),
-      appBar: AppBar(
-        title: const Text(
-          'Home Page',
-          style: TextStyle(fontSize: 18),
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context); // Go back to the previous page
+            },
+          ),
+          title: const Text('Your Outfit'),
+          centerTitle: true,
         ),
-        backgroundColor: const Color.fromRGBO(176, 222, 250, 1),
-        leading: Builder(
-          builder: (BuildContext context) {
-            return IconButton(
-              iconSize: 40,
-              icon: const Icon(Icons.menu),
-              onPressed: () {
-                Scaffold.of(context).openDrawer();
-              },
-            );
-          },
-        ),
+        body: OutfitList(),
+        bottomNavigationBar: const BottomNavigation(),
       ),
-      drawer: const SidebarNavigation(),
-      body: _buildUI(context),
-      bottomNavigationBar: const BottomNavigation(),
     );
   }
 }
 
-Widget _buildUI(BuildContext context) {
-  return Column(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [_functionsButton(context)],
-  );
+class OutfitList extends StatefulWidget {
+  @override
+  _OutfitListState createState() => _OutfitListState();
 }
 
-Widget _functionsButton(BuildContext context) {
-  return Column(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      Container(
-        width: 360, // Adjust the size of the rectangle
-        height: 165,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10), // Add border radius
-        ),
-        child: Stack(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                image: const DecorationImage(
-                  image: AssetImage(
-                      'assets/images/outfit-generator.jpg'), // Add your background image
-                  fit: BoxFit.cover,
-                ),
-                borderRadius: BorderRadius.circular(10), // Add border radius
-              ),
-            ),
-            Container(
-              decoration: BoxDecoration(
-                color: const Color.fromRGBO(247, 185, 43, 1)
-                    .withOpacity(0.8), // Add color overlay with opacity
-                borderRadius:
-                    BorderRadius.circular(10), // Add same border radius
-              ),
-            ),
-            const Center(
-              child: Text(
-                'Outfit Generator',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                  shadows: [
-                    Shadow(
-                      blurRadius: 4.0,
-                      color: Color.fromARGB(50, 0, 0, 0),
-                      offset: Offset(0, 4.0),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Center(
-              child: InkWell(
-                //A rectangular area of a Material that responds to touch.
-                onTap: () {
-                  // Navigate to the OutfitGenerator function
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const OutfitGenerator()),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
-      ),
+class _OutfitListState extends State<OutfitList> {
+  late Future<List<String>> upperImages;
+  late Future<List<String>> lowerImages;
+  late Future<List<String>> footwearImages;
 
-      const SizedBox(height: 20), // Adjust the space between shapes
-      Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-            width: 170, // Adjust the size of the squares
-            height: 170,
-            child: Stack(
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    image: const DecorationImage(
-                      image: AssetImage(
-                          'assets/images/manage.jpg'), // Add your background image
-                      fit: BoxFit.cover,
-                    ),
-                    borderRadius:
-                        BorderRadius.circular(10), // Add border radius
-                  ),
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    color: const Color.fromRGBO(151, 71, 255, 1)
-                        .withOpacity(0.8), // Add color overlay with opacity
-                    borderRadius:
-                        BorderRadius.circular(10), // Add same border radius
-                  ),
-                ),
-                const Center(
-                  child: Text(
-                    'Manage Closet',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                      shadows: [
-                        Shadow(
-                          blurRadius: 4.0,
-                          color: Color.fromARGB(50, 0, 0, 0),
-                          offset: Offset(0, 4.0),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Center(
-                  child: InkWell(
-                    //A rectangular area of a Material that responds to touch.
-                    onTap: () {
-                      // Navigate to the OutfitGenerator function
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const ManageCloset()),
-                      );
-                    },
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 20),
-          // Adjust the space between squares
-          GestureDetector(
-            onTap: () {
-              // Handle tap action here
-            },
-            child: SizedBox(
-              width: 170,
-              height: 170,
-              child: Stack(
+  int upperIndex = 0;
+  int lowerIndex = 0;
+  int footwearIndex = 0;
+
+  Map<String, int> imagePoints = {};
+
+  @override
+  void initState() {
+    super.initState();
+    upperImages = _loadImages('upper');
+    lowerImages = _loadImages('lower');
+    footwearImages = _loadImages('footwear');
+  }
+
+  Future<List<String>> _loadImages(String category) async {
+    List<String> imageUrls = [];
+    final ListResult result =
+        await FirebaseStorage.instance.ref('images/$category').listAll();
+    final List<Reference> allFiles = result.items;
+
+    for (Reference file in allFiles) {
+      final String downloadURL = await file.getDownloadURL();
+      imageUrls.add(downloadURL);
+      imagePoints[downloadURL] = 0; // Initialize points for each image
+    }
+    return imageUrls;
+  }
+
+  void _rotateImage(String category, int length) {
+    setState(() {
+      switch (category) {
+        case 'upper':
+          upperIndex = (upperIndex + 1) % length;
+          break;
+        case 'lower':
+          lowerIndex = (lowerIndex + 1) % length;
+          break;
+        case 'footwear':
+          footwearIndex = (footwearIndex + 1) % length;
+          break;
+      }
+    });
+  }
+
+  void _decreasePoints(String imageUrl) {
+    setState(() {
+      imagePoints[imageUrl] = (imagePoints[imageUrl] ?? 0) - 1;
+    });
+  }
+
+  void _increasePoints(String imageUrl) {
+    setState(() {
+      imagePoints[imageUrl] = (imagePoints[imageUrl] ?? 0) + 1;
+    });
+  }
+
+  void _printImagePoints() {
+    imagePoints.forEach((url, points) {
+      debugPrint('Image URL: $url, Points: $points');
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: Future.wait([upperImages, lowerImages, footwearImages]),
+      builder: (context, AsyncSnapshot<List<List<String>>> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error loading images'));
+        } else {
+          final upperImages = snapshot.data![0];
+          final lowerImages = snapshot.data![1];
+          final footwearImages = snapshot.data![2];
+
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              OutfitItem(
+                imageUrl: upperImages[upperIndex],
+                onRotate: () {
+                  _rotateImage('upper', upperImages.length);
+                  _decreasePoints(upperImages[upperIndex]);
+                  _printImagePoints();
+                }, //=> _rotateImage('upper', upperImages.length),
+              ),
+              const SizedBox(height: 20), // Add space between items
+              OutfitItem(
+                imageUrl: lowerImages[lowerIndex],
+                onRotate: () {
+                  _rotateImage('lower', lowerImages.length);
+                  _decreasePoints(lowerImages[lowerIndex]);
+                  _printImagePoints();
+                }, //=> _rotateImage('lower', lowerImages.length),
+              ),
+              const SizedBox(height: 20), // Add space between items
+              OutfitItem(
+                imageUrl: footwearImages[footwearIndex],
+                onRotate: () {
+                  _rotateImage('foorwear', footwearImages.length);
+                  _decreasePoints(footwearImages[footwearIndex]);
+                  _printImagePoints();
+                }, //=> _rotateImage('footwear', footwearImages.length),
+              ),
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Container(
-                    decoration: BoxDecoration(
-                      image: const DecorationImage(
-                        image: AssetImage(
-                            'assets/images/stat.jpg'), // Add your background image
-                        fit: BoxFit.cover,
-                      ),
-                      borderRadius:
-                          BorderRadius.circular(10), // Add border radius
-                    ),
-                  ),
-                  Container(
-                    decoration: BoxDecoration(
-                      color: const Color.fromRGBO(64, 135, 237, 1)
-                          .withOpacity(0.8), // Add color overlay with opacity
-                      borderRadius:
-                          BorderRadius.circular(10), // Add same border radius
-                    ),
-                  ),
-                  const Center(
-                    child: Text(
-                      'Declutter Closet',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                        shadows: [
-                          Shadow(
-                            blurRadius: 4.0,
-                            color: Color.fromARGB(50, 0, 0, 0),
-                            offset: Offset(0, 4.0),
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color.fromRGBO(95, 0, 250, 1)
+                                .withOpacity(0.1),
+                            spreadRadius: 0,
+                            blurRadius: 15,
+                            offset: const Offset(
+                                0, 0), // changes position of shadow
                           ),
                         ],
                       ),
+                      child: ElevatedButton(
+                        onPressed: () {
+                          _decreasePoints(upperImages[upperIndex]);
+                          _decreasePoints(lowerImages[lowerIndex]);
+                          _decreasePoints(footwearImages[footwearIndex]);
+                          _printImagePoints();
+                        },
+                        style: ButtonStyle(
+                          shape:
+                              MaterialStateProperty.all<RoundedRectangleBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                  15.0), // Set your desired border radius
+                            ),
+                          ),
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                            const Color.fromRGBO(95, 0, 250, 1),
+                          ),
+                          padding:
+                              MaterialStateProperty.all<EdgeInsetsGeometry>(
+                            const EdgeInsets.all(20),
+                          ),
+                        ),
+                        child: const Icon(Icons.refresh, color: Colors.white),
+                      )),
+                  const SizedBox(width: 20),
+                  Container(
+                    decoration: BoxDecoration(
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color.fromRGBO(255, 46, 46, 1)
+                              .withOpacity(0.1),
+                          spreadRadius: 0,
+                          blurRadius: 15,
+                          offset:
+                              const Offset(0, 0), // changes position of shadow
+                        ),
+                      ],
                     ),
-                  ),
-                  Center(
-                    child: InkWell(
-                      //A rectangular area of a Material that responds to touch.
-                      onTap: () {
-                        // Navigate to the OutfitGenerator function
+                    child: ElevatedButton(
+                      onPressed: () {
+                        _increasePoints(upperImages[upperIndex]);
+                        _increasePoints(lowerImages[lowerIndex]);
+                        _increasePoints(footwearImages[footwearIndex]);
+                        _printImagePoints();
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const DeclutterCloset()),
+                              builder: (context) => const ChosenOutfit()),
                         );
                       },
+                      style: ButtonStyle(
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                                15.0), // Set your desired border radius
+                          ),
+                        ),
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                          const Color.fromRGBO(255, 46, 46, 1),
+                        ),
+                        padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                          const EdgeInsets.all(20),
+                        ),
+                      ),
+                      child: const Icon(Icons.favorite, color: Colors.white),
                     ),
                   ),
                 ],
               ),
-            ),
-          ),
-        ],
-      ),
-    ],
-  );
+            ],
+          );
+        }
+      },
+    );
+  }
 }
+
+class OutfitItem extends StatelessWidget {
+  final String imageUrl;
+  final VoidCallback onRotate;
+
+  const OutfitItem({super.key, required this.imageUrl, required this.onRotate});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(100),
+            border: Border.all(
+              color: const Color.fromRGBO(183, 183, 183, 1),
+              width: 0.5,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: const Color.fromARGB(10, 0, 0, 0).withOpacity(0.1),
+                spreadRadius: 0,
+                blurRadius: 15,
+                offset: const Offset(0, 0),
+              ),
+            ],
+          ),
+          margin: const EdgeInsets.only(right: 15),
+          child: ElevatedButton(
+            onPressed: onRotate,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.white,
+              shape: const CircleBorder(),
+              padding: const EdgeInsets.all(20),
+            ),
+            child: const Icon(Icons.rotate_right, color: Colors.black),
+          ),
+        ),
+        Container(
+          width: 120,
+          height: 120,
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: NetworkImage(imageUrl),
+              fit: BoxFit.cover,
+            ),
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+                color: const Color.fromRGBO(183, 183, 183, 1), width: 2),
+            boxShadow: [
+              BoxShadow(
+                color: const Color.fromARGB(10, 0, 0, 0).withOpacity(0.1),
+                spreadRadius: 0,
+                blurRadius: 15,
+                offset: const Offset(0, 0),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+//////////////////////////////////////////////
