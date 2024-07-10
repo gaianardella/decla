@@ -32,7 +32,7 @@ class HomePage extends StatelessWidget {
       ),
       drawer: const SidebarNavigation(),
       body: _buildUI(context),
-      bottomNavigationBar: const BottomNavigation(),
+      // bottomNavigationBar: const BottomNavigation(),
     );
   }
 }
@@ -98,7 +98,8 @@ Widget _functionsButton(BuildContext context) {
                   // Navigate to the OutfitGenerator function
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const OutfitGenerator()),
+                    MaterialPageRoute(
+                        builder: (context) => const OutfitGenerator()),
                   );
                 },
               ),
@@ -160,7 +161,8 @@ Widget _functionsButton(BuildContext context) {
                       // Navigate to the OutfitGenerator function
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const ManageCloset()),
+                        MaterialPageRoute(
+                            builder: (context) => const ManageCloset()),
                       );
                     },
                   ),

@@ -2,7 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:decla/widgets/bottom_navigation.dart';
 
 class ChosenOutfit extends StatelessWidget {
-  const ChosenOutfit({super.key});
+  final String upperImage;
+  final String lowerImage;
+  final String footwearImage;
+
+  const ChosenOutfit({
+    super.key,
+    required this.upperImage,
+    required this.lowerImage,
+    required this.footwearImage,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -21,16 +30,13 @@ class ChosenOutfit extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           OutfitItem(
-            imagePath: 'assets/images/top.png',
-            onRotate: () {},
+            imageUrl: upperImage,
           ),
           OutfitItem(
-            imagePath: 'assets/images/skirt.png',
-            onRotate: () {},
+            imageUrl: lowerImage,
           ),
           OutfitItem(
-            imagePath: 'assets/images/shoes.png',
-            onRotate: () {},
+            imageUrl: footwearImage,
           ),
         ],
       ),
@@ -40,10 +46,9 @@ class ChosenOutfit extends StatelessWidget {
 }
 
 class OutfitItem extends StatelessWidget {
-  final String imagePath;
-  final VoidCallback onRotate;
+  final String imageUrl;
 
-  const OutfitItem({super.key, required this.imagePath, required this.onRotate});
+  const OutfitItem({super.key, required this.imageUrl});
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +62,7 @@ class OutfitItem extends StatelessWidget {
             height: 120,
             decoration: BoxDecoration(
               image: DecorationImage(
-                image: AssetImage(imagePath),
+                image: NetworkImage(imageUrl),
                 fit: BoxFit.cover,
               ),
               borderRadius: BorderRadius.circular(8),
