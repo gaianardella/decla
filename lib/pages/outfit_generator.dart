@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:decla/widgets/bottom_navigation.dart';
 import 'package:decla/pages/chosen_outfit.dart';
@@ -85,6 +86,16 @@ class _OutfitListState extends State<OutfitList> {
     });
   }
 
+  void _rotateAllImages(List<String> upperImages, List<String> lowerImages,
+      List<String> footwearImages) {
+    final random = Random();
+    setState(() {
+      upperIndex = random.nextInt(upperImages.length);
+      lowerIndex = random.nextInt(lowerImages.length);
+      footwearIndex = random.nextInt(footwearImages.length);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
@@ -134,7 +145,8 @@ class _OutfitListState extends State<OutfitList> {
                         ],
                       ),
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () => _rotateAllImages(
+                            upperImages, lowerImages, footwearImages),
                         style: ButtonStyle(
                           shape:
                               MaterialStateProperty.all<RoundedRectangleBorder>(
