@@ -16,6 +16,7 @@ class _AddItemState extends State<AddItem> {
   String _selectedOption = '';
   Color _selectedColor = Colors.transparent;
   Uint8List? _imageBytes;
+  String? _selectedFileName;
   final TextEditingController _titleController = TextEditingController();
 
   void _handleOptionChange(String value) {
@@ -41,6 +42,7 @@ class _AddItemState extends State<AddItem> {
     if (pickedFile != null) {
       setState(() async {
         _imageBytes = await pickedFile.readAsBytes();
+        _selectedFileName = pickedFile.name; // Store the file name
       });
     }
   }
@@ -74,11 +76,60 @@ class _AddItemState extends State<AddItem> {
     );
   }
 
+  // Future<void> _uploadImage() async {
+  //   if (_imageBytes == null) return;
+
+  //   String fileName =
+  //       'images/${_titleController.text}_${_selectedOption}_${_selectedColor.value}_${DateTime.now().millisecondsSinceEpoch}.jpg';
+
+  //   try {
+  //     // Upload image to Firebase Storage
+  //     await FirebaseStorage.instance
+  //         .ref(fileName)
+  //         .putData(_imageBytes!, SettableMetadata(contentType: 'image/jpeg'));
+
+  //     // Get the download URL
+  //     String downloadURL =
+  //         await FirebaseStorage.instance.ref(fileName).getDownloadURL();
+
+  //     // Save the URL and metadata to Firestore
+  //     await FirebaseFirestore.instance.collection('images').add({
+  //       'title': _titleController.text,
+  //       'category': _selectedOption,
+  //       'color': _selectedColor.value.toString(),
+  //       'url': downloadURL,
+  //       'uploaded_at': DateTime.now(),
+  //     });
+
+  //     print('Upload successful');
+  //   } catch (e) {
+  //     print('Error uploading image: $e');
+  //   }
+  // }
+
+  String _getFolderPath() {
+    switch (_selectedOption) {
+      case 'Shoes':
+      case 'Sandals':
+        return 'footwear';
+      case 'T-Shirt':
+      case 'Sweater':
+        return 'upper';
+      case 'Trousers':
+      case 'Skirt':
+        return 'lower';
+      default:
+        return 'other';
+    }
+  }
+
   Future<void> _uploadImage() async {
     if (_imageBytes == null) return;
 
+    String folderPath = _getFolderPath();
+    debugPrint(folderPath);
     String fileName =
-        'images/${_titleController.text}_${_selectedOption}_${_selectedColor.value}_${DateTime.now().millisecondsSinceEpoch}.jpg';
+        'images/$folderPath/${_titleController.text}_${_selectedOption}_${_selectedColor.value}_${DateTime.now().millisecondsSinceEpoch}.jpg';
 
     try {
       // Upload image to Firebase Storage
@@ -99,9 +150,9 @@ class _AddItemState extends State<AddItem> {
         'uploaded_at': DateTime.now(),
       });
 
-      print('Upload successful');
+      debugPrint('Upload successful');
     } catch (e) {
-      print('Error uploading image: $e');
+      debugPrint('Error uploading image: $e');
     }
   }
 
@@ -277,6 +328,18 @@ class _AddItemState extends State<AddItem> {
                   ),
                 ),
               ),
+              if (_selectedFileName !=
+                  null) // Display the selected file name if not null
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    _selectedFileName!,
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
               const SizedBox(height: 20),
               const SizedBox(height: 20),
               SizedBox(
