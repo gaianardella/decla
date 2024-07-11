@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:decla/pages/home.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -42,7 +41,7 @@ class DeclutterCloset extends StatelessWidget {
 void navigateToHome(BuildContext context) {
   Navigator.pushAndRemoveUntil(
     context,
-    MaterialPageRoute(builder: (context) => const HomePage()),
+    MaterialPageRoute(builder: (context) => const HomeScreen()),
     (Route<dynamic> route) => false,
   );
 }
@@ -56,15 +55,12 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late Future<List<Map<String, String>>> itemsFuture;
-
-  List<Map<String, String>> items = []; // List to hold fetched items
-
-  String _selectedChip = 'All'; // Initial selected chip
+  List<Map<String, String>> items = [];
 
   @override
   void initState() {
     super.initState();
-    // Initialize future to fetch all items
+    // Initialize to fetch all items initially
     itemsFuture = fetchAllItems();
   }
 
@@ -94,19 +90,17 @@ class _HomeScreenState extends State<HomeScreen> {
       ListResult result, String category) async {
     List<Map<String, String>> fetchedItems = [];
 
-    for (Reference file in result.items) {
+    for (Reference ref in result.items) {
       try {
-        final String downloadURL = await file.getDownloadURL();
-        String fileName = file.name.split('/').last;
-        // Assuming your file names are structured like 'label_image.png'
+        final String downloadURL = await ref.getDownloadURL();
+        String fileName = ref.name.split('/').last;
         String label =
             fileName.split('_').first; // Extract label from file name
         fetchedItems.add({
-          'fullPath': file.fullPath, // Store full path for deletion
+          'fullPath': ref.fullPath, // Store full path for deletion
           'image': downloadURL,
           'label': label,
-          'category': category
-              .toLowerCase(), // Store category for filtering (convert to lowercase)
+          'category': category, // Store category for filtering
         });
       } catch (e) {
         print('Error fetching item: $e');
@@ -155,6 +149,8 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  String _selectedChip = 'All';
+
   void _filterItems(String category) {
     setState(() {
       _selectedChip = category;
@@ -168,11 +164,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<List<Map<String, String>>> fetchItemsByCategory(
       String category) async {
-    await itemsFuture; // Ensure itemsFuture has completed before filtering
-    List<Map<String, String>> filteredItems = items
-        .where(
-            (item) => item['category']!.toLowerCase() == category.toLowerCase())
-        .toList();
+    List<Map<String, String>> filteredItems =
+        items.where((item) => item['category'] == category).toList();
     return filteredItems;
   }
 
@@ -183,8 +176,7 @@ class _HomeScreenState extends State<HomeScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            navigateToHome(
-                context); // Navigate back to the home screen using the navigateToHome function
+            navigateToHome(context);
           },
         ),
         title: const Text("Items you don't use"),
@@ -222,85 +214,71 @@ class _HomeScreenState extends State<HomeScreen> {
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(child: Text('No items found.'));
+                  return const Center(child: CircularProgressIndicator());
                 } else {
                   items = snapshot.data!; // Update items with fetched data
-                  List<Map<String, String>> filteredItems =
-                      _selectedChip == 'All'
-                          ? items
-                          : items
-                              .where((item) =>
-                                  item['category']!.toLowerCase() ==
-                                  _selectedChip.toLowerCase())
-                              .toList();
-                  return filteredItems.isEmpty
-                      ? Center(
-                          child: Text(
-                              'No items found for $_selectedChip category.'))
-                      : ListView.builder(
-                          itemCount: filteredItems.length,
-                          itemBuilder: (context, index) {
-                            return Container(
-                              height: 120,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(4.0),
-                                boxShadow: const [
-                                  BoxShadow(
-                                    color: Color.fromRGBO(176, 176, 176, 0.2),
-                                    spreadRadius: -6,
-                                    blurRadius: 10,
-                                    offset: Offset(0, 0),
-                                  ),
-                                ],
-                              ),
-                              child: Card(
-                                color: Colors.white,
-                                margin: const EdgeInsets.symmetric(
-                                    vertical: 8.0, horizontal: 16.0),
-                                child: Center(
-                                  child: ListTile(
-                                    leading: SizedBox(
-                                      width: 80,
-                                      child: Image.network(
-                                        filteredItems[index]['image']!,
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                    title: Text(filteredItems[index]['label']!),
-                                    trailing: Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(8.0),
-                                        boxShadow: const [
-                                          BoxShadow(
-                                            color: Color.fromRGBO(
-                                                176, 176, 176, 1),
-                                            spreadRadius: -6,
-                                            blurRadius: 15,
-                                            offset: Offset(0, 0),
-                                          ),
-                                        ],
-                                        gradient: const LinearGradient(
-                                          colors: [
-                                            Color.fromRGBO(255, 120, 120, 1),
-                                            Color.fromRGBO(255, 46, 46, 1),
-                                          ],
-                                          begin: Alignment.topLeft,
-                                          end: Alignment.bottomRight,
-                                        ),
-                                      ),
-                                      child: IconButton(
-                                        icon: const Icon(Icons.delete_outline,
-                                            color: Colors.white),
-                                        onPressed: () => _deleteItem(index),
-                                      ),
-                                    ),
-                                  ),
+                  return ListView.builder(
+                    itemCount: items.length,
+                    itemBuilder: (context, index) {
+                      return Container(
+                        height: 120,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4.0),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color.fromRGBO(176, 176, 176, 0.2),
+                              spreadRadius: -6,
+                              blurRadius: 10,
+                              offset: Offset(0, 0),
+                            ),
+                          ],
+                        ),
+                        child: Card(
+                          color: Colors.white,
+                          margin: const EdgeInsets.symmetric(
+                              vertical: 8.0, horizontal: 16.0),
+                          child: Center(
+                            child: ListTile(
+                              leading: SizedBox(
+                                width: 80,
+                                child: Image.network(
+                                  items[index]['image']!,
+                                  fit: BoxFit.cover,
                                 ),
                               ),
-                            );
-                          },
-                        );
+                              title: Text(items[index]['label']!),
+                              trailing: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color: Color.fromRGBO(176, 176, 176, 1),
+                                      spreadRadius: -6,
+                                      blurRadius: 15,
+                                      offset: Offset(0, 0),
+                                    ),
+                                  ],
+                                  gradient: const LinearGradient(
+                                    colors: [
+                                      Color.fromRGBO(255, 120, 120, 1),
+                                      Color.fromRGBO(255, 46, 46, 1),
+                                    ],
+                                    begin: Alignment.topLeft,
+                                    end: Alignment.bottomRight,
+                                  ),
+                                ),
+                                child: IconButton(
+                                  icon: const Icon(Icons.delete_outline,
+                                      color: Colors.white),
+                                  onPressed: () => _deleteItem(index),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  );
                 }
               },
             ),
