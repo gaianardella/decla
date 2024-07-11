@@ -291,7 +291,6 @@ Widget _functionsButton(BuildContext context) {
   return Column(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
-<<<<<<< HEAD
       Container(
         width: 360, // Adjust the size of the rectangle
         height: 165,
@@ -350,19 +349,6 @@ Widget _functionsButton(BuildContext context) {
             ),
           ],
         ),
-=======
-      _buildFunctionButton(
-        context,
-        'Outfit Generator',
-        'assets/images/outfit-generator.jpg',
-        const Color.fromRGBO(247, 185, 43, 1),
-        () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const OutfitGenerator()),
-          );
-        },
->>>>>>> 255eff3006bd05907e23f2a71de8d62d4ebbf2e5
       ),
       const SizedBox(height: 20),
       _buildFunctionButton(
@@ -419,7 +405,6 @@ Widget _buildFunctionButton(BuildContext context, String title,
       ),
       child: Stack(
         children: [
-<<<<<<< HEAD
           SizedBox(
             width: 170, // Adjust the size of the squares
             height: 170,
@@ -476,15 +461,6 @@ Widget _buildFunctionButton(BuildContext context, String title,
                   ),
                 ),
               ],
-=======
-          Container(
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage(imagePath),
-                fit: BoxFit.cover,
-              ),
-              borderRadius: BorderRadius.circular(10),
->>>>>>> 255eff3006bd05907e23f2a71de8d62d4ebbf2e5
             ),
           ),
           Container(
