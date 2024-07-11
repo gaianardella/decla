@@ -1,3 +1,5 @@
+import 'package:decla/pages/home.dart';
+import 'package:decla/pages/add_item.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
@@ -174,7 +176,10 @@ class _HomeScreenState extends State<HomeScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            navigateToHome(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const HomePage()),
+            );
           },
         ),
         title: const Text("Your Items"),
@@ -341,22 +346,6 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.white,
         checkmarkColor: Colors.white,
         side: BorderSide.none,
-      ),
-    );
-  }
-}
-
-class AddItem extends StatelessWidget {
-  const AddItem({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Add Item'),
-      ),
-      body: Center(
-        child: const Text('Add Item Screen'),
       ),
     );
   }
