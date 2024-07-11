@@ -76,6 +76,8 @@ flutter:
       - assets/images/skirt.png
       - assets/images/shoes.png
       - assets/images/schedule.jpg
+      - assets/images/manage2.jpg
+      - assets/images/declutter.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

@@ -273,7 +273,7 @@ class HomePage extends StatelessWidget {
       ),
       drawer: const SidebarNavigation(),
       body: _buildUI(context),
-      bottomNavigationBar: const BottomNavigation(),
+      // bottomNavigationBar: const BottomNavigation(),
     );
   }
 }
@@ -307,7 +307,7 @@ Widget _functionsButton(BuildContext context) {
       _buildFunctionButton(
         context,
         'Manage Closet',
-        'assets/images/outfit-generator.jpg',
+        'assets/images/manage2.jpg',
         const Color.fromRGBO(151, 71, 255, 1),
         () {
           Navigator.push(
@@ -320,7 +320,7 @@ Widget _functionsButton(BuildContext context) {
       _buildFunctionButton(
         context,
         'Declutter Closet',
-        'assets/images/outfit-generator.jpg',
+        'assets/images/declutter.jpg',
         const Color.fromRGBO(64, 135, 237, 1),
         () {
           Navigator.push(

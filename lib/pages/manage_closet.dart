@@ -408,7 +408,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 context); // Navigate back to the home screen using the navigateToHome function
           },
         ),
-        title: const Text("Items you don't use"),
+        title: const Text("Your Items"),
         centerTitle: true,
         backgroundColor: Colors.white,
       ),
