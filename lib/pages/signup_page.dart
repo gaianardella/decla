@@ -24,12 +24,6 @@ class _SignupPageState extends State<SignupPage> {
   String? errorMessage = '';
   bool isLoading = false;
 
-  // void printControllerValues() {
-  //   debugPrint("Name: ${_controllerName.text}");
-  //   debugPrint("Email: ${_controllerEmail.text}");
-  //   debugPrint("Password: ${_controllerPassword.text}");
-  // }
-
   Future<void> createUserWithEmailAndPassword() async {
     final name = _controllerName.text.trim();
     final email = _controllerEmail.text.trim();
@@ -182,21 +176,6 @@ class _SignupPageState extends State<SignupPage> {
     );
   }
 
-  // Widget _signupForm(BuildContext context) {
-  //   return SizedBox(
-  //     child: Column(
-  //       mainAxisSize: MainAxisSize.max,
-  //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //       crossAxisAlignment: CrossAxisAlignment.center,
-  //       children: [
-  //         _formFields(context),
-  //         _signupWidth(context),
-  //         _bottomButtons(context),
-  //       ],
-  //     ),
-  //   );
-  // }
-
   Widget _formFields(BuildContext context) {
     return SizedBox(
       child: Column(
@@ -278,10 +257,6 @@ class _SignupPageState extends State<SignupPage> {
           padding: const EdgeInsets.only(top: 30),
           child: GestureDetector(
             onTap: () {
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(builder: (context) => SecondPage()),
-              // );
             },
             child: RichText(
               text: TextSpan(
@@ -316,41 +291,5 @@ class _SignupPageState extends State<SignupPage> {
     );
   }
 
-  // goToHome(BuildContext context) => Navigator.push(
-  //       context,
-  //       MaterialPageRoute(builder: (context) => const HomePage()),
-  //     );
-
-  // _signup() async {
-  //   log("Sono entrato");
-  //   final user =
-  //       await _auth.createUserWithEmailAndPassword(_email.text, _password.text);
-  //   if (mounted) {
-  //     if (user != null) {
-  //       log("User Created Succesfully");
-  //       goToHome(context);
-  //     }
-  //   }
-  // }
 }
 
-class SecondPage extends StatelessWidget {
-  const SecondPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Second Page'),
-      ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            Navigator.pop(context); // Go back to the previous page
-          },
-          child: const Text('Go Back'),
-        ),
-      ),
-    );
-  }
-}

@@ -32,15 +32,6 @@ class _LoginPageState extends State<LoginPage> {
     _password.dispose();
   }
 
-  // void printControllerValues() {
-  //   debugPrint("Name: ${_name.text}");
-  //   debugPrint("Email: ${_email.text}");
-  //   debugPrint("Password: ${_password.text}");
-  // }
-
-  //name = admin
-  //email = admin@admin.com
-  //password = admin12
   Future<void> signInWithEmailAndPassword() async {
     if (_email.text.isEmpty || _password.text.isEmpty) {
       setState(() {
@@ -259,7 +250,7 @@ class _LoginPageState extends State<LoginPage> {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const SecondPage()),
+                MaterialPageRoute(builder: (context) => const HomePage()),
               );
             },
             child: RichText(
@@ -295,22 +286,3 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
-
-// class SecondPage extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('Second Page'),
-//       ),
-//       body: Center(
-//         child: ElevatedButton(
-//           onPressed: () {
-//             Navigator.pop(context); // Go back to the previous page
-//           },
-//           child: const Text('Go Back'),
-//         ),
-//       ),
-//     );
-//   }
-// }

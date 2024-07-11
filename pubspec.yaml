@@ -69,12 +69,7 @@ flutter:
   assets:
       - assets/images/ 
       - assets/images/outfit-generator.jpg
-      - assets/images/manage.jpg
       - assets/images/avatar.png
-      - assets/images/stat.jpg
-      - assets/images/top.png
-      - assets/images/skirt.png
-      - assets/images/shoes.png
       - assets/images/schedule.jpg
       - assets/images/manage2.jpg
       - assets/images/declutter.jpg
