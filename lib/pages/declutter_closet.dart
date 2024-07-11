@@ -1,4 +1,3 @@
-//ELIMINA DA UI E FIREBASE MA NON VA FILTRO
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -11,7 +10,7 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +25,7 @@ class MyApp extends StatelessWidget {
 }
 
 class DeclutterCloset extends StatelessWidget {
-  const DeclutterCloset({super.key});
+  const DeclutterCloset({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +48,7 @@ void navigateToHome(BuildContext context) {
 }
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -59,6 +58,8 @@ class _HomeScreenState extends State<HomeScreen> {
   late Future<List<Map<String, String>>> itemsFuture;
 
   List<Map<String, String>> items = []; // List to hold fetched items
+
+  String _selectedChip = 'All'; // Initial selected chip
 
   @override
   void initState() {
@@ -104,7 +105,8 @@ class _HomeScreenState extends State<HomeScreen> {
           'fullPath': file.fullPath, // Store full path for deletion
           'image': downloadURL,
           'label': label,
-          'category': category, // Store category for filtering
+          'category': category
+              .toLowerCase(), // Store category for filtering (convert to lowercase)
         });
       } catch (e) {
         print('Error fetching item: $e');
@@ -153,8 +155,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  String _selectedChip = 'All';
-
   void _filterItems(String category) {
     setState(() {
       _selectedChip = category;
@@ -168,8 +168,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<List<Map<String, String>>> fetchItemsByCategory(
       String category) async {
-    List<Map<String, String>> filteredItems =
-        items.where((item) => item['category'] == category).toList();
+    List<Map<String, String>> filteredItems = items
+        .where((item) => item['category'] == category.toLowerCase())
+        .toList();
     return filteredItems;
   }
 
@@ -222,8 +223,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   return const Center(child: Text('No items found.'));
                 } else {
                   items = snapshot.data!; // Update items with fetched data
+                  List<Map<String, String>> filteredItems = _selectedChip ==
+                          'All'
+                      ? items
+                      : items
+                          .where((item) =>
+                              item['category'] == _selectedChip.toLowerCase())
+                          .toList();
                   return ListView.builder(
-                    itemCount: items.length,
+                    itemCount: filteredItems.length,
                     itemBuilder: (context, index) {
                       return Container(
                         height: 120,
@@ -247,11 +255,11 @@ class _HomeScreenState extends State<HomeScreen> {
                               leading: SizedBox(
                                 width: 80,
                                 child: Image.network(
-                                  items[index]['image']!,
+                                  filteredItems[index]['image']!,
                                   fit: BoxFit.cover,
                                 ),
                               ),
-                              title: Text(items[index]['label']!),
+                              title: Text(filteredItems[index]['label']!),
                               trailing: Container(
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(8.0),
@@ -315,9 +323,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         selected: _selectedChip == label,
         onSelected: (selected) {
-          setState(() {
-            _selectedChip = selected ? label : 'All';
-          });
+          _filterItems(selected ? label : 'All');
         },
         selectedColor: const Color.fromRGBO(0, 219, 146, 1),
         backgroundColor: Colors.white,

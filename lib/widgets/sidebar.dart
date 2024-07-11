@@ -1,9 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as path;
 import 'package:decla/pages/login_page.dart';
 
 class SidebarNavigation extends StatefulWidget {
-  const SidebarNavigation({super.key});
+  const SidebarNavigation({Key? key}) : super(key: key);
 
   @override
   _SidebarNavigationState createState() => _SidebarNavigationState();
@@ -13,6 +18,79 @@ class _SidebarNavigationState extends State<SidebarNavigation> {
   bool _isEditingProfile = false;
   String _selectedSex = 'Male'; // Define _selectedSex as a field
   bool _isChangesConfirmed = false; // Track if changes are confirmed
+  User? _currentUser; // Track the current user
+  TextEditingController _nameController = TextEditingController();
+  File? _image; // Track the selected image file
+  final ImagePicker _picker = ImagePicker();
+
+  @override
+  void initState() {
+    super.initState();
+    _currentUser = FirebaseAuth.instance.currentUser;
+    _nameController.text = _currentUser?.displayName ?? '';
+  }
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
+  }
+
+  void _saveProfileChanges() async {
+    String newName = _nameController.text.trim();
+    if (newName.isEmpty) {
+      // Handle empty name input if needed
+      return;
+    }
+
+    try {
+      // Update display name
+      await _currentUser?.updateDisplayName(newName);
+
+      // Update profile picture if a new image was selected
+      if (_image != null) {
+        String fileName = path.basename(_image!.path);
+        Reference firebaseStorageRef =
+            FirebaseStorage.instance.ref().child('profile_images/$fileName');
+        await firebaseStorageRef.putFile(_image!);
+        String downloadURL = await firebaseStorageRef.getDownloadURL();
+        await _currentUser?.updatePhotoURL(downloadURL);
+      }
+
+      await _currentUser?.reload();
+      _currentUser = FirebaseAuth.instance.currentUser;
+
+      if (mounted) {
+        setState(() {
+          _isChangesConfirmed = true;
+          _isEditingProfile = false;
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Profile updated successfully')),
+        );
+      }
+    } catch (e) {
+      print('Error updating profile: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to update profile: $e')),
+        );
+      }
+    }
+  }
+
+  Future<void> _getImageFromGallery() async {
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+      } else {
+        print('No image selected.');
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,6 +145,9 @@ class _SidebarNavigationState extends State<SidebarNavigation> {
                         setState(() {
                           _isEditingProfile = !_isEditingProfile;
                           _isChangesConfirmed = false; // Reset confirmation
+                          _nameController.text =
+                              _currentUser?.displayName ?? '';
+                          _image = null; // Reset selected image
                         });
                       },
                       child: Column(
@@ -75,32 +156,72 @@ class _SidebarNavigationState extends State<SidebarNavigation> {
                             Center(
                               child: Column(
                                 children: [
-                                  Container(
-                                    height: 102,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      border: Border.all(
-                                        color: const Color.fromARGB(
-                                            255, 37, 37, 37),
-                                        width: 3,
+                                  GestureDetector(
+                                    onTap: _getImageFromGallery,
+                                    child: Container(
+                                      height: 102,
+                                      decoration: BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          color: const Color.fromARGB(
+                                              255, 37, 37, 37),
+                                          width: 3,
+                                        ),
                                       ),
-                                    ),
-                                    child: const CircleAvatar(
-                                      radius: 50,
-                                      backgroundImage: AssetImage(
-                                          'assets/images/avatar.png'),
+                                      child: CircleAvatar(
+                                        radius: 50,
+                                        backgroundImage: _image != null
+                                            ? FileImage(_image!)
+                                            : _currentUser?.photoURL != null
+                                                ? NetworkImage(
+                                                    _currentUser!.photoURL!)
+                                                : AssetImage(
+                                                        'assets/images/avatar.png')
+                                                    as ImageProvider,
+                                      ),
                                     ),
                                   ),
                                   const SizedBox(height: 10),
-                                  const Text(
-                                    'Edit',
-                                    style: TextStyle(
+                                  Container(
+                                    width:
+                                        MediaQuery.of(context).size.width * 0.6,
+                                    decoration: BoxDecoration(
                                       color: Colors.white,
-                                      fontSize: 16,
+                                      borderRadius: BorderRadius.circular(8.0),
+                                    ),
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8.0),
+                                      child: TextFormField(
+                                        controller: _nameController,
+                                        decoration: const InputDecoration(
+                                          hintText: 'Enter your full name',
+                                          hintStyle:
+                                              TextStyle(color: Colors.grey),
+                                          border: InputBorder.none,
+                                        ),
+                                        style: const TextStyle(
+                                            color: Colors.black),
+                                      ),
                                     ),
                                   ),
-                                  const Divider(
-                                      color: Colors.white, thickness: 1),
+                                  const SizedBox(height: 20),
+                                  ElevatedButton(
+                                    onPressed: _saveProfileChanges,
+                                    child: const Text('Save Changes'),
+                                  ),
+                                  if (_isChangesConfirmed)
+                                    const Padding(
+                                      padding: EdgeInsets.all(16.0),
+                                      child: Text(
+                                        'Changes confirmed!',
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
                                 ],
                               ),
                             )
@@ -118,130 +239,25 @@ class _SidebarNavigationState extends State<SidebarNavigation> {
                                       width: 3,
                                     ),
                                   ),
-                                  child: const CircleAvatar(
+                                  child: CircleAvatar(
                                     radius: 50,
-                                    backgroundImage:
-                                        AssetImage('assets/images/avatar.png'),
+                                    backgroundImage: _currentUser?.photoURL !=
+                                            null
+                                        ? NetworkImage(_currentUser!.photoURL!)
+                                        : AssetImage('assets/images/avatar.png')
+                                            as ImageProvider,
                                   ),
                                 ),
                                 const SizedBox(width: 10),
-                                const Text(
-                                  'Sofia Nardi',
-                                  style: TextStyle(
-                                    // color: Color.fromRGBO(39, 39, 39, 1),
+                                Text(
+                                  _currentUser?.displayName ?? 'Sofia Nardi',
+                                  style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 16,
                                   ),
                                 ),
                               ],
                             ),
-                          if (_isEditingProfile) ...[
-                            const SizedBox(height: 10),
-                            Center(
-                              child: Column(
-                                // crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    'Full name:',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                  const SizedBox(
-                                      height:
-                                          8), // Add some space between the text and the form field
-                                  Container(
-                                    width:
-                                        MediaQuery.of(context).size.width * 0.6,
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(8.0),
-                                    ),
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8.0),
-                                      child: TextFormField(
-                                        // Your form field widget goes here
-                                        decoration: const InputDecoration(
-                                          hintText: 'Enter your full name',
-                                          hintStyle:
-                                              TextStyle(color: Colors.grey),
-                                          border: InputBorder.none,
-                                        ),
-                                        style: const TextStyle(
-                                            color: Colors.black),
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 20),
-                                  const Text(
-                                    'Sex:',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Radio<String>(
-                                        value: 'Male',
-                                        groupValue: _selectedSex,
-                                        onChanged: (String? value) {
-                                          setState(() {
-                                            _selectedSex = value!;
-                                          });
-                                        },
-                                        activeColor: Colors.white,
-                                      ),
-                                      const Text(
-                                        'Male',
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                      const SizedBox(width: 20),
-                                      Radio<String>(
-                                        value: 'Female',
-                                        groupValue: _selectedSex,
-                                        onChanged: (String? value) {
-                                          setState(() {
-                                            _selectedSex = value!;
-                                          });
-                                        },
-                                        activeColor: Colors.white,
-                                      ),
-                                      const Text(
-                                        'Female',
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(height: 20),
-                            ElevatedButton(
-                              onPressed: () {
-                                setState(() {
-                                  _isChangesConfirmed = true;
-                                });
-                              },
-                              child: const Text('Confirm Changes'),
-                            ),
-                            if (_isChangesConfirmed)
-                              const Padding(
-                                padding: EdgeInsets.all(16.0),
-                                child: Text(
-                                  'Changes confirmed!',
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                          ],
                         ],
                       ),
                     ),
@@ -324,35 +340,23 @@ class _SidebarNavigationState extends State<SidebarNavigation> {
       ),
     );
   }
-}
 
-void _logout(BuildContext context) {
-  Future<void> _logout(BuildContext context) async {
+  void _logout(BuildContext context) async {
     try {
       await FirebaseAuth.instance.signOut();
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => LoginPage()),
-      );
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginPage()),
+        );
+      }
     } catch (e) {
       print("Error logging out: $e");
-      // Handle error if needed
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to log out: $e')),
+        );
+      }
     }
   }
-}
-
-void main() {
-  runApp(
-    MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Sidebar Navigation Example'),
-        ),
-        drawer: const SidebarNavigation(),
-        body: const Center(
-          child: Text('Main Content'),
-        ),
-      ),
-    ),
-  );
 }

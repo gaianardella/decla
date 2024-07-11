@@ -1,18 +1,13 @@
-library;
 import 'package:flutter/material.dart';
-import 'package:decla/pages/home.dart';
-import 'package:decla/pages/add_item.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +22,7 @@ class MyApp extends StatelessWidget {
 }
 
 class ManageCloset extends StatelessWidget {
-  const ManageCloset({super.key});
+  const ManageCloset({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -44,13 +39,13 @@ class ManageCloset extends StatelessWidget {
 void navigateToHome(BuildContext context) {
   Navigator.pushAndRemoveUntil(
     context,
-    MaterialPageRoute(builder: (context) => const HomePage()),
+    MaterialPageRoute(builder: (context) => const HomeScreen()),
     (Route<dynamic> route) => false,
   );
 }
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  const HomeScreen({Key? key}) : super(key: key);
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -58,13 +53,12 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   late Future<List<Map<String, String>>> itemsFuture;
-
-  List<Map<String, String>> items = []; // List to hold fetched items
+  List<Map<String, String>> items = [];
 
   @override
   void initState() {
     super.initState();
-    // Initialize future to fetch all items
+    // Initialize to fetch all items initially
     itemsFuture = fetchAllItems();
   }
 
@@ -94,15 +88,14 @@ class _HomeScreenState extends State<HomeScreen> {
       ListResult result, String category) async {
     List<Map<String, String>> fetchedItems = [];
 
-    for (Reference file in result.items) {
+    for (Reference ref in result.items) {
       try {
-        final String downloadURL = await file.getDownloadURL();
-        String fileName = file.name.split('/').last;
-        // Assuming your file names are structured like 'label_image.png'
+        final String downloadURL = await ref.getDownloadURL();
+        String fileName = ref.name.split('/').last;
         String label =
             fileName.split('_').first; // Extract label from file name
         fetchedItems.add({
-          'fullPath': file.fullPath, // Store full path for deletion
+          'fullPath': ref.fullPath, // Store full path for deletion
           'image': downloadURL,
           'label': label,
           'category': category, // Store category for filtering
@@ -181,8 +174,7 @@ class _HomeScreenState extends State<HomeScreen> {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            navigateToHome(
-                context); // Navigate back to the home screen using the navigateToHome function
+            navigateToHome(context);
           },
         ),
         title: const Text("Your Items"),
@@ -220,7 +212,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(child: Text('No items found.'));
+                  return const Center(child: CircularProgressIndicator());
                 } else {
                   items = snapshot.data!; // Update items with fetched data
                   return ListView.builder(
@@ -292,8 +284,8 @@ class _HomeScreenState extends State<HomeScreen> {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: SizedBox(
-              width: double.infinity, // Set the desired width
-              height: 50, // Set the desired height
+              width: double.infinity,
+              height: 50,
               child: ElevatedButton.icon(
                 onPressed: () {
                   Navigator.push(
@@ -310,8 +302,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   backgroundColor: const Color.fromRGBO(58, 0, 207, 1),
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
-                    borderRadius:
-                        BorderRadius.circular(8.0), // Set border radius
+                    borderRadius: BorderRadius.circular(8.0),
                   ),
                 ),
               ),
@@ -331,7 +322,7 @@ class _HomeScreenState extends State<HomeScreen> {
             color: Colors.black.withOpacity(0.04),
             spreadRadius: 0,
             blurRadius: 8,
-            offset: const Offset(0, 0), // changes position of shadow
+            offset: const Offset(0, 0),
           ),
         ],
       ),
@@ -344,15 +335,28 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         selected: _selectedChip == label,
         onSelected: (selected) {
-          setState(() {
-            _selectedChip = selected ? label : '';
-          });
+          _filterItems(selected ? label : 'All');
         },
         selectedColor: const Color.fromRGBO(0, 219, 146, 1),
         backgroundColor: Colors.white,
         checkmarkColor: Colors.white,
-        side: BorderSide
-            .none, // Optional: makes the checkmark more visible on green background
+        side: BorderSide.none,
+      ),
+    );
+  }
+}
+
+class AddItem extends StatelessWidget {
+  const AddItem({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Add Item'),
+      ),
+      body: Center(
+        child: const Text('Add Item Screen'),
       ),
     );
   }

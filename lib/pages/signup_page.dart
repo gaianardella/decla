@@ -9,7 +9,7 @@ import 'package:decla/widgets/google_apple.dart';
 import 'package:flutter/gestures.dart';
 
 class SignupPage extends StatefulWidget {
-  const SignupPage({super.key});
+  const SignupPage({Key? key}) : super(key: key);
 
   @override
   _SignupPageState createState() => _SignupPageState();
@@ -50,6 +50,9 @@ class _SignupPageState extends State<SignupPage> {
         password: password,
       );
       if (user != null) {
+        // Update user profile with the provided name
+        await user.updateDisplayName(name);
+
         debugPrint('User signed up successfully: ${user.email}');
         Navigator.pushReplacement(
           context,
@@ -256,8 +259,7 @@ class _SignupPageState extends State<SignupPage> {
         Padding(
           padding: const EdgeInsets.only(top: 30),
           child: GestureDetector(
-            onTap: () {
-            },
+            onTap: () {},
             child: RichText(
               text: TextSpan(
                 style: const TextStyle(
@@ -278,7 +280,8 @@ class _SignupPageState extends State<SignupPage> {
                         // Handle "Sign Up" link tap
                         Navigator.push(
                           context, // Pass the BuildContext from the widget tree
-                          MaterialPageRoute(builder: (context) => const LoginPage()),
+                          MaterialPageRoute(
+                              builder: (context) => const LoginPage()),
                         );
                       },
                   ),
@@ -290,6 +293,4 @@ class _SignupPageState extends State<SignupPage> {
       ],
     );
   }
-
 }
-

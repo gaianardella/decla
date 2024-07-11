@@ -161,20 +161,6 @@ class _PasswordRecoveryState extends State<PasswordRecovery> {
             ),
           ),
           const SizedBox(height: 20), // Adding 16 pixels of vertical space
-          GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const LoginPage()),
-              );
-            },
-            child: const Center(
-              child: Text(
-                "Return to login",
-                style: TextStyle(color: Colors.blue, fontSize: 12),
-              ),
-            ),
-          ),
         ],
       ),
     );
@@ -215,7 +201,8 @@ class _PasswordRecoveryState extends State<PasswordRecovery> {
                         // Handle "Sign Up" link tap
                         Navigator.push(
                           context, // Pass the BuildContext from the widget tree
-                          MaterialPageRoute(builder: (context) => const LoginPage()),
+                          MaterialPageRoute(
+                              builder: (context) => const LoginPage()),
                         );
                       },
                   ),
