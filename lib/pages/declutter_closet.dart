@@ -168,8 +168,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<List<Map<String, String>>> fetchItemsByCategory(
       String category) async {
+    await itemsFuture; // Ensure itemsFuture has completed before filtering
     List<Map<String, String>> filteredItems = items
-        .where((item) => item['category'] == category.toLowerCase())
+        .where(
+            (item) => item['category']!.toLowerCase() == category.toLowerCase())
         .toList();
     return filteredItems;
   }
@@ -223,75 +225,82 @@ class _HomeScreenState extends State<HomeScreen> {
                   return const Center(child: Text('No items found.'));
                 } else {
                   items = snapshot.data!; // Update items with fetched data
-                  List<Map<String, String>> filteredItems = _selectedChip ==
-                          'All'
-                      ? items
-                      : items
-                          .where((item) =>
-                              item['category'] == _selectedChip.toLowerCase())
-                          .toList();
-                  return ListView.builder(
-                    itemCount: filteredItems.length,
-                    itemBuilder: (context, index) {
-                      return Container(
-                        height: 120,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(4.0),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Color.fromRGBO(176, 176, 176, 0.2),
-                              spreadRadius: -6,
-                              blurRadius: 10,
-                              offset: Offset(0, 0),
-                            ),
-                          ],
-                        ),
-                        child: Card(
-                          color: Colors.white,
-                          margin: const EdgeInsets.symmetric(
-                              vertical: 8.0, horizontal: 16.0),
-                          child: Center(
-                            child: ListTile(
-                              leading: SizedBox(
-                                width: 80,
-                                child: Image.network(
-                                  filteredItems[index]['image']!,
-                                  fit: BoxFit.cover,
-                                ),
+                  List<Map<String, String>> filteredItems =
+                      _selectedChip == 'All'
+                          ? items
+                          : items
+                              .where((item) =>
+                                  item['category']!.toLowerCase() ==
+                                  _selectedChip.toLowerCase())
+                              .toList();
+                  return filteredItems.isEmpty
+                      ? Center(
+                          child: Text(
+                              'No items found for $_selectedChip category.'))
+                      : ListView.builder(
+                          itemCount: filteredItems.length,
+                          itemBuilder: (context, index) {
+                            return Container(
+                              height: 120,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(4.0),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: Color.fromRGBO(176, 176, 176, 0.2),
+                                    spreadRadius: -6,
+                                    blurRadius: 10,
+                                    offset: Offset(0, 0),
+                                  ),
+                                ],
                               ),
-                              title: Text(filteredItems[index]['label']!),
-                              trailing: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  boxShadow: const [
-                                    BoxShadow(
-                                      color: Color.fromRGBO(176, 176, 176, 1),
-                                      spreadRadius: -6,
-                                      blurRadius: 15,
-                                      offset: Offset(0, 0),
+                              child: Card(
+                                color: Colors.white,
+                                margin: const EdgeInsets.symmetric(
+                                    vertical: 8.0, horizontal: 16.0),
+                                child: Center(
+                                  child: ListTile(
+                                    leading: SizedBox(
+                                      width: 80,
+                                      child: Image.network(
+                                        filteredItems[index]['image']!,
+                                        fit: BoxFit.cover,
+                                      ),
                                     ),
-                                  ],
-                                  gradient: const LinearGradient(
-                                    colors: [
-                                      Color.fromRGBO(255, 120, 120, 1),
-                                      Color.fromRGBO(255, 46, 46, 1),
-                                    ],
-                                    begin: Alignment.topLeft,
-                                    end: Alignment.bottomRight,
+                                    title: Text(filteredItems[index]['label']!),
+                                    trailing: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(8.0),
+                                        boxShadow: const [
+                                          BoxShadow(
+                                            color: Color.fromRGBO(
+                                                176, 176, 176, 1),
+                                            spreadRadius: -6,
+                                            blurRadius: 15,
+                                            offset: Offset(0, 0),
+                                          ),
+                                        ],
+                                        gradient: const LinearGradient(
+                                          colors: [
+                                            Color.fromRGBO(255, 120, 120, 1),
+                                            Color.fromRGBO(255, 46, 46, 1),
+                                          ],
+                                          begin: Alignment.topLeft,
+                                          end: Alignment.bottomRight,
+                                        ),
+                                      ),
+                                      child: IconButton(
+                                        icon: const Icon(Icons.delete_outline,
+                                            color: Colors.white),
+                                        onPressed: () => _deleteItem(index),
+                                      ),
+                                    ),
                                   ),
                                 ),
-                                child: IconButton(
-                                  icon: const Icon(Icons.delete_outline,
-                                      color: Colors.white),
-                                  onPressed: () => _deleteItem(index),
-                                ),
                               ),
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  );
+                            );
+                          },
+                        );
                 }
               },
             ),
