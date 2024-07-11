@@ -291,64 +291,17 @@ Widget _functionsButton(BuildContext context) {
   return Column(
     mainAxisAlignment: MainAxisAlignment.center,
     children: [
-      Container(
-        width: 360, // Adjust the size of the rectangle
-        height: 165,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10), // Add border radius
-        ),
-        child: Stack(
-          children: [
-            Container(
-              decoration: BoxDecoration(
-                image: const DecorationImage(
-                  image: AssetImage(
-                      'assets/images/outfit-generator.jpg'), // Add your background image
-                  fit: BoxFit.cover,
-                ),
-                borderRadius: BorderRadius.circular(10), // Add border radius
-              ),
-            ),
-            Container(
-              decoration: BoxDecoration(
-                color: const Color.fromRGBO(247, 185, 43, 1)
-                    .withOpacity(0.8), // Add color overlay with opacity
-                borderRadius:
-                    BorderRadius.circular(10), // Add same border radius
-              ),
-            ),
-            const Center(
-              child: Text(
-                'Outfit Generator',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                  shadows: [
-                    Shadow(
-                      blurRadius: 4.0,
-                      color: Color.fromARGB(50, 0, 0, 0),
-                      offset: Offset(0, 4.0),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Center(
-              child: InkWell(
-                //A rectangular area of a Material that responds to touch.
-                onTap: () {
-                  // Navigate to the OutfitGenerator function
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const OutfitGenerator()),
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
+      _buildFunctionButton(
+        context,
+        'Outfit Generator',
+        'assets/images/outfit-generator.jpg',
+        const Color.fromRGBO(247, 185, 43, 1),
+        () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const OutfitGenerator()),
+          );
+        },
       ),
       const SizedBox(height: 20),
       _buildFunctionButton(
@@ -405,62 +358,13 @@ Widget _buildFunctionButton(BuildContext context, String title,
       ),
       child: Stack(
         children: [
-          SizedBox(
-            width: 170, // Adjust the size of the squares
-            height: 170,
-            child: Stack(
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                    image: const DecorationImage(
-                      image: AssetImage(
-                          'assets/images/manage.jpg'), // Add your background image
-                      fit: BoxFit.cover,
-                    ),
-                    borderRadius:
-                        BorderRadius.circular(10), // Add border radius
-                  ),
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    color: const Color.fromRGBO(151, 71, 255, 1)
-                        .withOpacity(0.8), // Add color overlay with opacity
-                    borderRadius:
-                        BorderRadius.circular(10), // Add same border radius
-                  ),
-                ),
-                const Center(
-                  child: Text(
-                    'Manage Closet',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                      shadows: [
-                        Shadow(
-                          blurRadius: 4.0,
-                          color: Color.fromARGB(50, 0, 0, 0),
-                          offset: Offset(0, 4.0),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Center(
-                  child: InkWell(
-                    //A rectangular area of a Material that responds to touch.
-                    onTap: () {
-                      // Navigate to the OutfitGenerator function
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const ManageCloset()),
-                      );
-                    },
-                  ),
-                ),
-              ],
+          Container(
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                image: AssetImage(imagePath),
+                fit: BoxFit.cover,
+              ),
+              borderRadius: BorderRadius.circular(10),
             ),
           ),
           Container(
